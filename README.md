@@ -21,7 +21,7 @@
 
 1. 克隆仓库
 ```bash
-git clone https://github.com/你的用户名/shenge-gpt.git
+git clone https://github.com/yys806/shenge-gpt.git
 ```
 
 2. 打开 index.html 文件即可查看网站
