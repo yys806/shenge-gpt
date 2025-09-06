@@ -3,7 +3,6 @@ let gameState = {
     score: 0,
     round: 1,
     maxRounds: 5,
-    currentWord: '苹果',
     isDrawing: false,
     lastX: 0,
     lastY: 0
@@ -14,7 +13,6 @@ const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d');
 const scoreElement = document.getElementById('score');
 const roundElement = document.getElementById('round');
-const currentWordElement = document.getElementById('currentWord');
 const aiGuessElement = document.getElementById('aiGuess');
 const submitButton = document.getElementById('submitDrawing');
 const nextButton = document.getElementById('nextRound');
@@ -80,27 +78,41 @@ function submitDrawing() {
     // 禁用提交按钮
     submitButton.disabled = true;
     
-    // 模拟AI识别过程
-    aiGuessElement.textContent = 'AI正在识别中...';
+    // 显示AI识别过程
+    aiGuessElement.innerHTML = '<div>AI正在识别中...</div>';
     
     // 模拟API调用延迟
     setTimeout(() => {
         // 这里应该调用AI图像识别API
-        // 为了演示，我们随机决定是否识别正确
-        const isCorrect = Math.random() > 0.5;
+        // 为了演示，我们生成一些可能的猜测和概率
+        const guesses = [
+            { word: '苹果', probability: Math.random() * 0.3 + 0.1 },
+            { word: '香蕉', probability: Math.random() * 0.3 + 0.1 },
+            { word: '猫', probability: Math.random() * 0.3 + 0.1 },
+            { word: '狗', probability: Math.random() * 0.3 + 0.1 },
+            { word: '房子', probability: Math.random() * 0.3 + 0.1 },
+            { word: '汽车', probability: Math.random() * 0.3 + 0.1 },
+            { word: '花', probability: Math.random() * 0.3 + 0.1 },
+            { word: '树', probability: Math.random() * 0.3 + 0.1 },
+            { word: '鸟', probability: Math.random() * 0.3 + 0.1 },
+            { word: '鱼', probability: Math.random() * 0.3 + 0.1 }
+        ];
         
-        if (isCorrect) {
-            aiGuessElement.textContent = gameState.currentWord;
-            aiGuessElement.style.color = 'green';
-            gameState.score += 10;
-            scoreElement.textContent = gameState.score;
-        } else {
-            // 随机生成一个猜测词
-            const guesses = ['香蕉', '橙子', '汽车', '房子', '猫', '狗', '花', '树'];
-            const randomGuess = guesses[Math.floor(Math.random() * guesses.length)];
-            aiGuessElement.textContent = randomGuess;
-            aiGuessElement.style.color = 'red';
-        }
+        // 按概率排序
+        guesses.sort((a, b) => b.probability - a.probability);
+        
+        // 只显示前3个猜测
+        const topGuesses = guesses.slice(0, 3);
+        
+        // 生成显示内容
+        let guessHTML = '<div style="text-align: left;">';
+        topGuesses.forEach((guess, index) => {
+            const percentage = (guess.probability * 100).toFixed(1);
+            guessHTML += `<div>${index + 1}. ${guess.word} (${percentage}%)</div>`;
+        });
+        guessHTML += '</div>';
+        
+        aiGuessElement.innerHTML = guessHTML;
         
         // 启用下一回合按钮
         nextButton.disabled = false;
@@ -137,13 +149,7 @@ function nextRound() {
     clearCanvas();
     
     // 重置AI猜测显示
-    aiGuessElement.textContent = '-';
-    aiGuessElement.style.color = 'black';
-    
-    // 更新词语（实际应用中应从API获取）
-    const words = ['苹果', '香蕉', '猫', '狗', '房子', '汽车', '花', '树', '鸟', '鱼'];
-    gameState.currentWord = words[Math.floor(Math.random() * words.length)];
-    currentWordElement.textContent = gameState.currentWord;
+    aiGuessElement.innerHTML = '-';
     
     // 重置按钮状态
     submitButton.disabled = false;
@@ -157,16 +163,11 @@ function resetGame() {
     scoreElement.textContent = gameState.score;
     roundElement.textContent = `${gameState.round}/${gameState.maxRounds}`;
     
-    // 重置词语
-    gameState.currentWord = '苹果';
-    currentWordElement.textContent = gameState.currentWord;
-    
     // 清空画布
     clearCanvas();
     
     // 重置AI猜测显示
-    aiGuessElement.textContent = '-';
-    aiGuessElement.style.color = 'black';
+    aiGuessElement.innerHTML = '-';
     
     // 重置按钮状态
     submitButton.disabled = false;

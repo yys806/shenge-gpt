@@ -1,3 +1,25 @@
+// API Key 管理
+const API_KEY_STORAGE_KEY = 'modelscope_api_key';
+
+// 页面加载时恢复保存的 API Key
+window.addEventListener('load', () => {
+    const savedApiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
+    if (savedApiKey) {
+        document.getElementById('apiKey').value = savedApiKey;
+    }
+});
+
+// 保存 API Key
+document.getElementById('saveApiKey').addEventListener('click', () => {
+    const apiKey = document.getElementById('apiKey').value.trim();
+    if (apiKey) {
+        localStorage.setItem(API_KEY_STORAGE_KEY, apiKey);
+        alert('API Key 已保存');
+    } else {
+        alert('请输入有效的 API Key');
+    }
+});
+
 // 绘图功能
 const promptInput = document.getElementById('promptInput');
 const generateButton = document.getElementById('generateImage');
@@ -25,7 +47,13 @@ promptInput.addEventListener('keydown', (e) => {
 async function generateImage() {
     const prompt = promptInput.value.trim();
     if (!prompt) {
-        showMessage('请输入图像描述', 'error');
+        alert('请输入图像描述');
+        return;
+    }
+
+    const apiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
+    if (!apiKey) {
+        alert('请先设置 API Key');
         return;
     }
 
@@ -35,33 +63,44 @@ async function generateImage() {
     downloadButton.disabled = true;
 
     try {
-        // 这里应该是调用Google Nano Banana API的代码
-        // 由于Nano Banana是虚构的模型，我们模拟一个API调用
-        
-        // 模拟API延迟
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // 模拟生成的图像URL
-        const imageUrl = `https://picsum.photos/512/512?random=${Date.now()}`;
-        
-        // 显示生成的图像
-        imageResult.innerHTML = `<img src="${imageUrl}" alt="生成的图像" id="generatedImage">`;
-        downloadButton.disabled = false;
-        
-        // 保存图像URL用于下载
-        downloadButton.onclick = () => downloadImage(imageUrl);
+        // 调用 ModelScope API
+        const response = await fetch('https://api-inference.modelscope.cn/v1/images/generations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'Qwen/Qwen-Image',
+                prompt: prompt
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error?.message || 'API调用失败');
+        }
+
+        const data = await response.json();
+        if (data.data && data.data[0] && data.data[0].url) {
+            const imageUrl = data.data[0].url;
+            
+            // 显示生成的图像
+            imageResult.innerHTML = `<img src="${imageUrl}" alt="生成的图像" id="generatedImage">`;
+            downloadButton.disabled = false;
+            
+            // 保存图像URL用于下载
+            downloadButton.onclick = () => downloadImage(imageUrl);
+        } else {
+            imageResult.innerHTML = '<div class="draw-placeholder">生成图像失败，请稍后重试</div>';
+        }
         
     } catch (error) {
         console.error('Error:', error);
-        imageResult.innerHTML = '<div class="draw-placeholder">生成图像失败，请稍后重试</div>';
+        imageResult.innerHTML = `<div class="draw-placeholder">生成图像失败：${error.message}</div>`;
     } finally {
         generateButton.disabled = false;
     }
-}
-
-function showMessage(content, type = 'info') {
-    // 简单的消息提示功能
-    alert(`${type.toUpperCase()}: ${content}`);
 }
 
 function downloadImage(imageUrl) {

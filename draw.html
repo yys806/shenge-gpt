@@ -28,11 +28,19 @@
             <div class="draw-container">
                 <div class="draw-header">
                     <h2>AI 绘图助手</h2>
-                    <p>使用Google Nano Banana模型将文字转换为图像</p>
+                    <p>使用ModelScope Qwen/Qwen-Image模型将文字转换为图像</p>
                 </div>
                 
                 <div class="draw-content">
                     <div class="draw-input">
+                        <div class="api-setup">
+                            <h3>API 设置</h3>
+                            <div class="api-input">
+                                <input type="password" id="apiKey" placeholder="请输入您的 ModelScope API Key">
+                                <button id="saveApiKey">保存</button>
+                            </div>
+                            <p class="api-note">您的API密钥仅存储在本地浏览器中，不会上传到任何服务器。<a href="https://www.modelscope.cn/my/myaccesstoken" target="_blank">点击此处获取API key</a></p>
+                        </div>
                         <textarea id="promptInput" placeholder="描述您想要生成的图像，例如：一只坐在草地上的可爱猫咪"></textarea>
                         <div class="draw-actions">
                             <button id="clearPrompt" class="draw-button clear-button">清空</button>

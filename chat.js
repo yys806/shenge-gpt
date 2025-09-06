@@ -1,5 +1,5 @@
 // API Key 管理
-const API_KEY_STORAGE_KEY = 'google_ai_api_key';
+const API_KEY_STORAGE_KEY = 'modelscope_api_key';
 
 // 页面加载时恢复保存的 API Key
 window.addEventListener('load', () => {
@@ -82,17 +82,18 @@ async function sendMessage() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
     try {
-        // 调用 Google AI API (Gemini)
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+        // 调用 ModelScope API
+        const response = await fetch('https://api-inference.modelscope.cn/v1/chat/completions', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: message
-                    }]
+                model: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+                messages: [{
+                    role: 'user',
+                    content: message
                 }]
             })
         });
@@ -106,8 +107,8 @@ async function sendMessage() {
         }
 
         const data = await response.json();
-        if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-            const aiResponse = data.candidates[0].content.parts[0].text;
+        if (data.choices && data.choices[0] && data.choices[0].message) {
+            const aiResponse = data.choices[0].message.content;
             showMessage(aiResponse, 'ai');
         } else {
             showMessage('抱歉，AI未能生成回复。请稍后重试。', 'error');
