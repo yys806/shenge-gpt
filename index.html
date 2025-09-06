@@ -1,54 +1,91 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>珅哥GPT - 人工智能的未来</title>
+    <title>AI Hub - 人工智能平台</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="nav-container">
-        <div class="nav-content">
-            <a href="index.html" class="logo">珅哥GPT</a>
-            <div class="nav-links">
-                <a href="index.html">首页</a>
-                <a href="timeline.html">发展历史</a>
-                <a href="about.html">关于我们</a>
-                <a href="chat.html">智能对话</a>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">AI Hub</a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link active">首页</a>
+                <a href="chat.html" class="nav-link">AI聊天</a>
+                <a href="draw.html" class="nav-link">AI绘图</a>
+                <a href="games.html" class="nav-link">AI游戏</a>
             </div>
         </div>
     </nav>
 
-    <main>
-        <section class="hero">
-            <h1>珅哥GPT</h1>
-            <p class="subtitle">重新定义人工智能的未来</p>
-            <a href="chat.html" class="cta-button">开始对话</a>
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">探索人工智能的无限可能</h1>
+                <p class="hero-subtitle">集成了最先进的AI技术，为您提供聊天、绘图和游戏体验</p>
+                <div class="hero-buttons">
+                    <a href="chat.html" class="hero-button primary">开始AI聊天</a>
+                    <a href="draw.html" class="hero-button secondary">体验AI绘图</a>
+                </div>
+            </div>
         </section>
 
-        <section class="features">
-            <a href="innovation.html" class="feature-card">
-                <h2>创新技术</h2>
-                <p>突破性的AI模型和算法</p>
-                <span class="read-more">了解更多 →</span>
-            </a>
-            <a href="impact.html" class="feature-card">
-                <h2>全球影响</h2>
-                <p>改变世界的AI解决方案</p>
-                <span class="read-more">了解更多 →</span>
-            </a>
-            <a href="evolution.html" class="feature-card">
-                <h2>持续发展</h2>
-                <p>不断进化的AI生态系统</p>
-                <span class="read-more">了解更多 →</span>
-            </a>
+        <!-- 功能介绍 -->
+        <section class="features-section">
+            <div class="features-container">
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3 class="feature-title">AI聊天</h3>
+                    <p class="feature-description">与先进的AI模型进行智能对话，获取信息和帮助</p>
+                    <a href="chat.html" class="feature-link">立即体验</a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">AI绘图</h3>
+                    <p class="feature-description">将您的创意转化为图像，体验AI艺术创作</p>
+                    <a href="draw.html" class="feature-link">立即体验</a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3 class="feature-title">AI游戏</h3>
+                    <p class="feature-description">与AI一起玩游戏，包括你画我猜、五子棋和扫雷</p>
+                    <a href="games.html" class="feature-link">立即体验</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 简介区域 -->
+        <section class="intro-section">
+            <div class="intro-container">
+                <div class="intro-text">
+                    <h2 class="intro-title">为什么选择我们的AI平台？</h2>
+                    <p class="intro-description">我们整合了最先进的AI技术，为您提供无缝的体验。无论您是想聊天、创作艺术还是玩游戏，我们的平台都能满足您的需求。</p>
+                    <ul class="intro-features">
+                        <li>⚡ 高性能AI模型</li>
+                        <li>🎨 精美的用户界面</li>
+                        <li>🎮 丰富的游戏体验</li>
+                        <li>🔒 安全可靠的数据保护</li>
+                    </ul>
+                </div>
+            </div>
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2024 珅哥GPT. All rights reserved.</p>
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 AI Hub. 保留所有权利。</p>
+        </div>
     </footer>
 
     <script src="script.js"></script>
 </body>
-</html> 
+</html>

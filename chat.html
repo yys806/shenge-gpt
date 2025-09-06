@@ -1,50 +1,72 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>珅哥GPT - 智能对话</title>
+    <title>AI Hub - AI聊天</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="nav-container">
-        <div class="nav-content">
-            <a href="index.html" class="logo">珅哥GPT</a>
-            <div class="nav-links">
-                <a href="index.html">首页</a>
-                <a href="timeline.html">发展历史</a>
-                <a href="about.html">关于我们</a>
-                <a href="chat.html">智能对话</a>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">AI Hub</a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="chat.html" class="nav-link active">AI聊天</a>
+                <a href="draw.html" class="nav-link">AI绘图</a>
+                <a href="games.html" class="nav-link">AI游戏</a>
             </div>
         </div>
     </nav>
 
-    <main>
+    <!-- 主要内容 -->
+    <main class="main-content">
         <section class="chat-section">
-            <div class="api-setup">
-                <h2>API 设置</h2>
-                <div class="api-input">
-                    <input type="text" id="apiKey" placeholder="请输入您的 API Key">
-                    <button id="saveApiKey">保存</button>
-                </div>
-            </div>
-
             <div class="chat-container">
-                <div class="chat-messages" id="chatMessages">
-                    <!-- 消息将在这里动态添加 -->
+                <div class="chat-header">
+                    <h2>AI 聊天助手</h2>
+                    <p>与Google Gemini AI模型进行智能对话</p>
                 </div>
-                <div class="chat-input">
-                    <textarea id="userInput" placeholder="输入您的问题..."></textarea>
-                    <button id="sendMessage">发送</button>
+                
+                <div class="api-setup">
+                    <h3>API 设置</h3>
+                    <div class="api-input">
+                        <input type="password" id="apiKey" placeholder="请输入您的 Google AI API Key">
+                        <button id="saveApiKey">保存</button>
+                    </div>
+                    <p class="api-note">您的API密钥仅存储在本地浏览器中，不会上传到任何服务器。</p>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai-message">
+                        <div class="message-content">
+                            您好！我是您的AI助手，我可以帮助您回答问题、提供信息或进行创意讨论。请在下方输入框中输入您的问题，然后点击发送或按回车键。
+                        </div>
+                        <div class="message-time">现在</div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-container">
+                    <textarea id="userInput" placeholder="输入您的问题..." rows="3"></textarea>
+                    <div class="chat-actions">
+                        <button id="clearChat">清空聊天</button>
+                        <button id="sendMessage">发送</button>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2024 珅哥GPT. All rights reserved.</p>
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 AI Hub. 保留所有权利。</p>
+        </div>
     </footer>
 
     <script src="chat.js"></script>
 </body>
-</html> 
+</html>

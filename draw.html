@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hub - AI绘图</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">AI Hub</a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="chat.html" class="nav-link">AI聊天</a>
+                <a href="draw.html" class="nav-link active">AI绘图</a>
+                <a href="games.html" class="nav-link">AI游戏</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <section class="draw-section">
+            <div class="draw-container">
+                <div class="draw-header">
+                    <h2>AI 绘图助手</h2>
+                    <p>使用Google Nano Banana模型将文字转换为图像</p>
+                </div>
+                
+                <div class="draw-content">
+                    <div class="draw-input">
+                        <textarea id="promptInput" placeholder="描述您想要生成的图像，例如：一只坐在草地上的可爱猫咪"></textarea>
+                        <div class="draw-actions">
+                            <button id="clearPrompt" class="draw-button clear-button">清空</button>
+                            <button id="generateImage" class="draw-button generate-button">生成图像</button>
+                        </div>
+                        <div class="draw-info">
+                            <p>提示：详细描述您想要的图像内容，包括对象、颜色、背景等细节，可以得到更好的结果。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="draw-output">
+                        <div class="draw-result" id="imageResult">
+                            <div class="draw-placeholder">生成的图像将显示在这里</div>
+                        </div>
+                        <div class="draw-actions">
+                            <button id="downloadImage" class="draw-button" disabled>下载图像</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 AI Hub. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="draw.js"></script>
+</body>
+</html>

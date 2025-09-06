@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hub - AI你画我猜</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">AI Hub</a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="chat.html" class="nav-link">AI聊天</a>
+                <a href="draw.html" class="nav-link">AI绘图</a>
+                <a href="games.html" class="nav-link active">AI游戏</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <section class="games-section">
+            <div class="games-header">
+                <h1>AI 你画我猜</h1>
+                <p>根据AI给出的词语进行绘画，让AI猜测您画的是什么</p>
+            </div>
+            
+            <div class="game-container">
+                <div class="game-info">
+                    <div class="score-board">
+                        <div class="score-item">
+                            <span>得分:</span>
+                            <span id="score">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span>回合:</span>
+                            <span id="round">1/5</span>
+                        </div>
+                    </div>
+                    <div class="word-display">
+                        <h3>绘制词语:</h3>
+                        <div id="currentWord">苹果</div>
+                    </div>
+                </div>
+                
+                <div class="game-area">
+                    <div class="drawing-board">
+                        <canvas id="drawingCanvas" width="500" height="400"></canvas>
+                        <div class="canvas-tools">
+                            <button id="clearCanvas" class="tool-button">清空画布</button>
+                            <div class="color-picker">
+                                <button id="blackPen" class="tool-button active" style="background-color: black;"></button>
+                                <button id="redPen" class="tool-button" style="background-color: red;"></button>
+                                <button id="bluePen" class="tool-button" style="background-color: blue;"></button>
+                                <button id="greenPen" class="tool-button" style="background-color: green;"></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="guess-section">
+                        <div class="ai-guess">
+                            <h3>AI猜测:</h3>
+                            <div id="aiGuess" class="guess-display">-</div>
+                        </div>
+                        <div class="game-controls">
+                            <button id="submitDrawing" class="game-button">提交绘画</button>
+                            <button id="nextRound" class="game-button" disabled>下一回合</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 AI Hub. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="game-draw.js"></script>
+</body>
+</html>
