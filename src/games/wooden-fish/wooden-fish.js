@@ -55,7 +55,77 @@ class WoodenFish {
         this.playSound();
         
         // 显示+1动效
-        this.showPlusOne();
+            // 适配美化后的UI结构，确保功能正常
+            // 主要是选择器和交互逻辑
+            document.addEventListener('DOMContentLoaded', function() {
+                const gongdeEl = document.getElementById('gongde');
+                const muyuBtn = document.getElementById('muyu-btn');
+                const resetBtn = document.getElementById('reset-btn');
+                const totalCountEl = document.getElementById('total-count');
+                const todayCountEl = document.getElementById('today-count');
+                const moyuCountEl = document.getElementById('moyu-count');
+                const moyuModeEl = document.getElementById('moyu-mode');
+                const continueBtn = document.getElementById('continue-btn');
+
+                let gongde = 100;
+                let totalCount = 200;
+                let todayCount = 200;
+                let moyuCount = 2;
+                let inMoyuMode = false;
+
+                function updateStats() {
+                    gongdeEl.textContent = gongde + ' 功德';
+                    totalCountEl.textContent = totalCount;
+                    todayCountEl.textContent = todayCount;
+                    moyuCountEl.textContent = moyuCount;
+                }
+
+                function enterMoyuMode() {
+                    inMoyuMode = true;
+                    moyuModeEl.style.display = '';
+                    muyuBtn.disabled = true;
+                    muyuBtn.textContent = '摸鱼中...';
+                    moyuCount++;
+                    updateStats();
+                }
+
+                function exitMoyuMode() {
+                    inMoyuMode = false;
+                    moyuModeEl.style.display = 'none';
+                    muyuBtn.disabled = false;
+                    muyuBtn.textContent = '敲木鱼';
+                    gongde = 0;
+                    updateStats();
+                }
+
+                muyuBtn.addEventListener('click', function() {
+                    if (inMoyuMode) return;
+                    gongde++;
+                    totalCount++;
+                    todayCount++;
+                    updateStats();
+                    if (gongde >= 100) {
+                        enterMoyuMode();
+                    } else {
+                        muyuBtn.textContent = '敲木鱼';
+                    }
+                });
+
+                resetBtn.addEventListener('click', function() {
+                    gongde = 0;
+                    updateStats();
+                    muyuBtn.disabled = false;
+                    muyuBtn.textContent = '敲木鱼';
+                    moyuModeEl.style.display = 'none';
+                    inMoyuMode = false;
+                });
+
+                continueBtn.addEventListener('click', function() {
+                    exitMoyuMode();
+                });
+
+                updateStats();
+            });
         
         // 更新显示
         this.updateDisplay();

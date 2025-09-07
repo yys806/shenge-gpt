@@ -1,3 +1,113 @@
+/* 电子木鱼美化样式 */
+.muyu-bg {
+    min-height: 100vh;
+    background: url('https://img.zcool.cn/community/01b2b65e6e2e7ca801219c77b7e2e2.png') no-repeat center center fixed, linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    background-size: 300px, cover;
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+}
+.muyu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+.muyu-nav {
+    margin-top: 32px;
+    margin-bottom: 16px;
+    font-size: 18px;
+    color: #333;
+}
+.muyu-card {
+    background: rgba(255,255,255,0.85);
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 32px 40px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+.muyu-title {
+    font-size: 2.2em;
+    margin-bottom: 8px;
+    color: #3a7bd5;
+}
+.muyu-desc {
+    color: #666;
+    margin-bottom: 16px;
+}
+.muyu-center {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+.muyu-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    box-shadow: 0 2px 12px rgba(58,123,213,0.15);
+    background: #fff;
+    object-fit: cover;
+    margin-bottom: 8px;
+}
+.muyu-gongde {
+    font-size: 1.3em;
+    color: #f7b733;
+    margin-bottom: 16px;
+}
+.muyu-btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.muyu-btn {
+    padding: 10px 28px;
+    font-size: 1em;
+    border: none;
+    border-radius: 24px;
+    background: linear-gradient(90deg, #3a7bd5 0%, #00d2ff 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(58,123,213,0.12);
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.muyu-btn:hover {
+    background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%);
+    box-shadow: 0 4px 16px rgba(58,123,213,0.18);
+}
+.muyu-btn-secondary {
+    background: linear-gradient(90deg, #f7b733 0%, #fc4a1a 100%);
+    color: #fff;
+}
+.muyu-btn-secondary:hover {
+    background: linear-gradient(90deg, #fc4a1a 0%, #f7b733 100%);
+}
+.muyu-stats {
+    background: #f6fafd;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    color: #333;
+    font-size: 1em;
+    box-shadow: 0 1px 6px rgba(58,123,213,0.07);
+}
+.muyu-guide {
+    background: #f7f7fa;
+    border-radius: 16px;
+    padding: 16px;
+    color: #555;
+    font-size: 1em;
+    margin-bottom: 16px;
+}
+.muyu-mode {
+    background: #e0eafc;
+    border-radius: 16px;
+    padding: 16px;
+    color: #3a7bd5;
+    font-size: 1.1em;
+    margin-bottom: 8px;
+}
 /* 全局样式 */
 * {
     margin: 0;

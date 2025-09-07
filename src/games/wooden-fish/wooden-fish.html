@@ -22,40 +22,48 @@
         </div>
     </nav>
 
-    <!-- 主要内容 -->
-    <main class="main-content">
-        <section class="wooden-fish-section">
-            <div class="container">
-                <div class="fish-header">
-                    <h1>🐟 电子木鱼</h1>
-                    <p>敲击木鱼，净化心灵，积累功德</p>
+    <body class="muyu-bg">
+        <div class="muyu-container">
+            <nav class="muyu-nav">
+                <a href="../../index.html">AI Hub</a>
+                <span> | </span>
+                <a href="../index.html">首页</a>
+                <span>番茄钟 单词本 AI游戏</span>
+            </nav>
+            <div class="muyu-card">
+                <h2 class="muyu-title">🐟 电子木鱼</h2>
+                <p class="muyu-desc">敲击木鱼，净化心灵，积累功德</p>
+                <div class="muyu-center">
+                    <img src="https://img.zcool.cn/community/01b2b65e6e2e7ca801219c77b7e2e2.png" alt="木鱼" class="muyu-img" />
                 </div>
-
-                <div class="fish-counter">
-                    <div class="counter-display">
-                        <span class="counter-number" id="counterNumber">0</span>
-                        <span class="counter-label">功德</span>
-                    </div>
+                <div id="gongde" class="muyu-gongde">100 功德</div>
+                <div class="muyu-btn-group">
+                    <button id="muyu-btn" class="muyu-btn">摸鱼中...</button>
+                    <button id="reset-btn" class="muyu-btn muyu-btn-secondary">重置功德</button>
                 </div>
-
-                <div class="fish-container">
-                    <div class="wooden-fish" id="woodenFish">
-                        <div class="fish-body">
-                            <div class="fish-eyes">
-                                <div class="eye left"></div>
-                                <div class="eye right"></div>
-                            </div>
-                            <div class="fish-mouth"></div>
-                            <div class="fish-pattern"></div>
-                        </div>
-                        <div class="fish-tail"></div>
-                    </div>
-                    
-                    <div class="fish-stick" id="fishStick">
-                        <div class="stick-handle"></div>
-                        <div class="stick-head"></div>
-                    </div>
+                <div class="muyu-stats">
+                    <h3>修行统计</h3>
+                    <div><span id="total-count">200</span> 总敲击数</div>
+                    <div><span id="today-count">200</span> 今日敲击</div>
+                    <div><span id="moyu-count">2</span> 摸鱼次数</div>
                 </div>
+                <div class="muyu-guide">
+                    <h3>修行指南</h3>
+                    <ul>
+                        <li>每次敲击都会增加1点功德</li>
+                        <li>功德满100时进入摸鱼模式</li>
+                        <li>摸鱼模式可以放松心情</li>
+                        <li>坚持修行，净化心灵</li>
+                    </ul>
+                </div>
+                <div id="moyu-mode" class="moyu-mode" style="display: none;">
+                    <h3>摸鱼模式</h3>
+                    功德圆满！进入放松摸鱼模式<br>
+                    <button id="continue-btn" class="muyu-btn">继续修行</button>
+                </div>
+            </div>
+        </div>
+    </body>
 
                 <div class="fish-controls">
                     <button class="btn btn-primary" id="tapBtn">敲击木鱼</button>
