@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄钟 - AI Hub</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../../index.html">AI Hub</a>
+            </div>
+            <div class="nav-menu">
+                <a href="../../index.html" class="nav-link">首页</a>
+                <a href="../chat/chat.html" class="nav-link">AI聊天</a>
+                <a href="../fortune/fortune.html" class="nav-link">星座运势</a>
+                <a href="../games/index.html" class="nav-link">AI游戏</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <section class="pomodoro-section">
+            <div class="pomodoro-container">
+                <div class="pomodoro-header">
+                    <h2>番茄钟</h2>
+                    <p>提高专注力和工作效率的时间管理工具</p>
+                </div>
+                
+                <div class="pomodoro-timer">
+                    <div class="timer-display">
+                        <div class="time" id="time">25:00</div>
+                        <div class="session-type" id="sessionType">专注时间</div>
+                    </div>
+                    
+                    <div class="timer-controls">
+                        <button id="startBtn" class="timer-button primary">开始</button>
+                        <button id="pauseBtn" class="timer-button" disabled>暂停</button>
+                        <button id="resetBtn" class="timer-button">重置</button>
+                    </div>
+                    
+                    <div class="timer-settings">
+                        <div class="setting">
+                            <label for="workDuration">专注时间 (分钟):</label>
+                            <input type="number" id="workDuration" min="1" max="60" value="25">
+                        </div>
+                        
+                        <div class="setting">
+                            <label for="breakDuration">休息时间 (分钟):</label>
+                            <input type="number" id="breakDuration" min="1" max="30" value="5">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pomodoro-stats">
+                    <h3>今日统计</h3>
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <span class="stat-value" id="completedPomodoros">0</span>
+                            <span class="stat-label">完成番茄钟</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="totalTime">0</span>
+                            <span class="stat-label">专注分钟</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 AI Hub. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="../common/script.js"></script>
+    <script src="pomodoro.js"></script>
+</body>
+</html>

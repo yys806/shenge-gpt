@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星座运势 - AI Hub</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../../index.html">AI Hub</a>
+            </div>
+            <div class="nav-menu">
+                <a href="../../index.html" class="nav-link">首页</a>
+                <a href="../chat/chat.html" class="nav-link">AI聊天</a>
+                <a href="fortune.html" class="nav-link active">星座运势</a>
+                <a href="../games/index.html" class="nav-link">AI游戏</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <section class="fortune-section">
+            <div class="fortune-container">
+                <div class="fortune-header">
+                    <h2>星座运势</h2>
+                    <p>查看您的每日星座运势和建议</p>
+                </div>
+                
+                <div class="zodiac-selector">
+                    <label for="zodiacSelect">选择您的星座：</label>
+                    <select id="zodiacSelect">
+                        <option value="aries">白羊座 (3/21-4/19)</option>
+                        <option value="taurus">金牛座 (4/20-5/20)</option>
+                        <option value="gemini">双子座 (5/21-6/21)</option>
+                        <option value="cancer">巨蟹座 (6/22-7/22)</option>
+                        <option value="leo">狮子座 (7/23-8/22)</option>
+                        <option value="virgo">处女座 (8/23-9/22)</option>
+                        <option value="libra">天秤座 (9/23-10/23)</option>
+                        <option value="scorpio">天蝎座 (10/24-11/22)</option>
+                        <option value="sagittarius">射手座 (11/23-12/21)</option>
+                        <option value="capricorn">摩羯座 (12/22-1/19)</option>
+                        <option value="aquarius">水瓶座 (1/20-2/18)</option>
+                        <option value="pisces">双鱼座 (2/19-3/20)</option>
+                    </select>
+                    <button id="getFortune" class="fortune-button">查看运势</button>
+                </div>
+                
+                <div class="fortune-result" id="fortuneResult">
+                    <div class="fortune-placeholder">请选择您的星座并点击查看运势</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 AI Hub. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="../common/script.js"></script>
+    <script src="fortune.js"></script>
+</body>
+</html>
