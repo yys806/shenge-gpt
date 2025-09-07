@@ -7,7 +7,7 @@ const API_CONFIG = {
     },
     // 生产环境
     production: {
-        baseURL: 'https://your-vercel-app.vercel.app/api',
+        baseURL: 'https://shenge-gpt.vercel.app/api',
         timeout: 10000
     }
 };
