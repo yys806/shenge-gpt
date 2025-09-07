@@ -15,8 +15,9 @@
             </div>
             <div class="nav-menu">
                 <a href="index.html" class="nav-link active">首页</a>
-                <a href="src/chat/chat.html" class="nav-link">AI聊天</a>
-                <a href="src/fortune/fortune.html" class="nav-link">星座运势</a>
+                <a href="src/pomodoro/pomodoro.html" class="nav-link">番茄钟</a>
+                <a href="src/vocabulary/vocabulary.html" class="nav-link">单词本</a>
+                <a href="src/quotes/quotes.html" class="nav-link">一言</a>
                 <a href="src/games/index.html" class="nav-link">AI游戏</a>
             </div>
         </div>
@@ -24,14 +25,25 @@
 
     <!-- 主要内容 -->
     <main class="main-content">
+        <!-- 一言区域 -->
+        <section class="quote-section">
+            <div class="quote-container">
+                <div class="quote-content">
+                    <p class="quote-text" id="quoteText">书山有路勤为径，学海无涯苦作舟。</p>
+                    <p class="quote-author" id="quoteAuthor">— 韩愈</p>
+                </div>
+                <button class="quote-refresh" id="quoteRefresh">换一句</button>
+            </div>
+        </section>
+
         <!-- 英雄区域 -->
         <section class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title">探索人工智能的无限可能</h1>
-                <p class="hero-subtitle">集成了最先进的AI技术，为您提供聊天、绘图和游戏体验</p>
+                <h1 class="hero-title">提升效率，学习成长</h1>
+                <p class="hero-subtitle">专注工作，高效学习，享受游戏时光</p>
                 <div class="hero-buttons">
-                    <a href="src/chat/chat.html" class="hero-button primary">开始AI聊天</a>
-                    <a href="src/fortune/fortune.html" class="hero-button secondary">查看星座运势</a>
+                    <a href="src/pomodoro/pomodoro.html" class="hero-button primary">开始专注</a>
+                    <a href="src/vocabulary/vocabulary.html" class="hero-button secondary">学习单词</a>
                 </div>
             </div>
         </section>
@@ -40,23 +52,30 @@
         <section class="features-section">
             <div class="features-container">
                 <div class="feature-card">
-                    <div class="feature-icon">💬</div>
-                    <h3 class="feature-title">AI聊天</h3>
-                    <p class="feature-description">与先进的AI模型进行智能对话，获取信息和帮助</p>
-                    <a href="src/chat/chat.html" class="feature-link">立即体验</a>
+                    <div class="feature-icon">🍅</div>
+                    <h3 class="feature-title">番茄钟</h3>
+                    <p class="feature-description">专注工作，高效学习，提升时间管理能力</p>
+                    <a href="src/pomodoro/pomodoro.html" class="feature-link">立即体验</a>
                 </div>
                 
                 <div class="feature-card">
-                    <div class="feature-icon">⭐</div>
-                    <h3 class="feature-title">星座运势</h3>
-                    <p class="feature-description">每日星座运势查询，了解你的今日运势和建议</p>
-                    <a href="src/fortune/fortune.html" class="feature-link">立即体验</a>
+                    <div class="feature-icon">📚</div>
+                    <h3 class="feature-title">单词本</h3>
+                    <p class="feature-description">每日学习四级单词，提升英语水平</p>
+                    <a href="src/vocabulary/vocabulary.html" class="feature-link">立即体验</a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💭</div>
+                    <h3 class="feature-title">一言</h3>
+                    <p class="feature-description">每日名言警句，激励心灵成长</p>
+                    <a href="src/quotes/quotes.html" class="feature-link">立即体验</a>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">🎮</div>
                     <h3 class="feature-title">AI游戏</h3>
-                    <p class="feature-description">与AI一起玩游戏，包括你画我猜、五子棋和扫雷</p>
+                    <p class="feature-description">享受各种有趣的益智游戏</p>
                     <a href="src/games/index.html" class="feature-link">立即体验</a>
                 </div>
             </div>
@@ -87,5 +106,30 @@
     </footer>
 
     <script src="src/common/script.js"></script>
-</body>
-</html>
+    <script>
+        // 一言功能
+        const quotes = [
+            { text: "书山有路勤为径，学海无涯苦作舟。", author: "韩愈" },
+            { text: "成功不是将来才有的，而是从决定去做的那一刻起，持续累积而成。", author: "俞敏洪" },
+            { text: "人生最大的光荣，不在于永不失败，而在于能屡仆屡起。", author: "拿破仑" },
+            { text: "天行健，君子以自强不息。", author: "《周易》" },
+            { text: "山不辞土，故能成其高；海不辞水，故能成其深。", author: "《管子》" },
+            { text: "学而时习之，不亦说乎？", author: "孔子" },
+            { text: "知之者不如好之者，好之者不如乐之者。", author: "孔子" },
+            { text: "业精于勤，荒于嬉；行成于思，毁于随。", author: "韩愈" },
+            { text: "宝剑锋从磨砺出，梅花香自苦寒来。", author: "《警世贤文》" },
+            { text: "不积跬步，无以至千里；不积小流，无以成江海。", author: "荀子" }
+        ];
+
+        function showRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const quote = quotes[randomIndex];
+            document.getElementById('quoteText').textContent = quote.text;
+            document.getElementById('quoteAuthor').textContent = `— ${quote.author}`;
+        }
+
+        document.getElementById('quoteRefresh').addEventListener('click', showRandomQuote);
+        
+        // 页面加载时显示随机名言
+        showRandomQuote();
+    </script>

@@ -909,8 +909,410 @@ a {
     background-color: #ff0000;
 }
 
-/* 消息提示样式 */
-.message {
+/* 一言区域样式 */
+.quote-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem 0;
+    color: white;
+}
+
+.quote-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 2rem;
+}
+
+.quote-content {
+    margin-bottom: 2rem;
+}
+
+.quote-text {
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.quote-author {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.quote-refresh {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.quote-refresh:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* 番茄钟样式 */
+.pomodoro-section {
+    padding: 2rem 0;
+}
+
+.pomodoro-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.pomodoro-timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.timer-display {
+    margin-bottom: 2rem;
+}
+
+.time-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: 0 auto;
+}
+
+.time-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+    z-index: 2;
+}
+
+.timer-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transition: width 1s linear;
+}
+
+.timer-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.pomodoro-settings,
+.pomodoro-stats {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.setting-item label {
+    font-weight: 500;
+    color: #333;
+}
+
+.setting-item input,
+.setting-item select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+.pomodoro-tips {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.pomodoro-tips ul {
+    list-style: none;
+    padding: 0;
+}
+
+.pomodoro-tips li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.pomodoro-tips li:last-child {
+    border-bottom: none;
+}
+
+/* 单词本样式 */
+.vocabulary-section {
+    padding: 2rem 0;
+}
+
+.vocabulary-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.word-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.word-display {
+    margin-bottom: 2rem;
+}
+
+.word-text {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.word-phonetic {
+    font-size: 1.2rem;
+    color: #666;
+    font-style: italic;
+}
+
+.word-meaning {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+.word-example {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.word-example h4 {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.word-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.vocabulary-stats,
+.vocabulary-settings,
+.favorites-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.favorites-list {
+    margin-top: 1rem;
+}
+
+.favorite-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.favorite-word {
+    flex: 1;
+}
+
+.favorite-word strong {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.favorite-phonetic {
+    color: #666;
+    font-style: italic;
+    margin-left: 0.5rem;
+}
+
+.favorite-meaning {
+    flex: 2;
+    margin: 0 1rem;
+    color: #555;
+}
+
+.empty-message {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    padding: 2rem;
+}
+
+/* 消消乐游戏样式 */
+.game-section {
+    padding: 2rem 0;
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.game-info {
+    margin-bottom: 2rem;
+}
+
+.score-info {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.score-item {
+    text-align: center;
+}
+
+.score-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.score-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.game-board {
+    display: grid;
+    gap: 2px;
+    background: #333;
+    padding: 10px;
+    border-radius: 12px;
+    margin: 0 auto 2rem;
+    max-width: 400px;
+}
+
+.tile {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.tile:hover {
+    transform: scale(1.05);
+}
+
+.tile.selected {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.tile-red { background: #ff4757; }
+.tile-blue { background: #3742fa; }
+.tile-green { background: #2ed573; }
+.tile-yellow { background: #ffa502; }
+.tile-purple { background: #9c88ff; }
+.tile-orange { background: #ff6348; }
+
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.game-instructions {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.game-instructions ul {
+    list-style: none;
+    padding: 0;
+}
+
+.game-instructions li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.game-instructions li:last-child {
+    border-bottom: none;
+}
+
+/* 通知样式 */
+.notification {
     position: fixed;
     top: 20px;
     right: 20px;
@@ -924,22 +1326,22 @@ a {
     word-wrap: break-word;
 }
 
-.message-success {
+.notification-success {
     background-color: #10b981;
     border-left: 4px solid #059669;
 }
 
-.message-error {
+.notification-error {
     background-color: #ef4444;
     border-left: 4px solid #dc2626;
 }
 
-.message-info {
+.notification-info {
     background-color: #3b82f6;
     border-left: 4px solid #2563eb;
 }
 
-.message-warning {
+.notification-warning {
     background-color: #f59e0b;
     border-left: 4px solid #d97706;
 }

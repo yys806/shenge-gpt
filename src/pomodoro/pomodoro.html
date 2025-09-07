@@ -15,8 +15,9 @@
             </div>
             <div class="nav-menu">
                 <a href="../../index.html" class="nav-link">首页</a>
-                <a href="../chat/chat.html" class="nav-link">AI聊天</a>
-                <a href="../fortune/fortune.html" class="nav-link">星座运势</a>
+                <a href="pomodoro.html" class="nav-link active">番茄钟</a>
+                <a href="../vocabulary/vocabulary.html" class="nav-link">单词本</a>
+                <a href="../quotes/quotes.html" class="nav-link">一言</a>
                 <a href="../games/index.html" class="nav-link">AI游戏</a>
             </div>
         </div>
@@ -25,62 +26,77 @@
     <!-- 主要内容 -->
     <main class="main-content">
         <section class="pomodoro-section">
-            <div class="pomodoro-container">
+            <div class="container">
                 <div class="pomodoro-header">
-                    <h2>番茄钟</h2>
-                    <p>提高专注力和工作效率的时间管理工具</p>
+                    <h1>🍅 番茄钟</h1>
+                    <p>专注工作，高效学习</p>
                 </div>
-                
+
                 <div class="pomodoro-timer">
                     <div class="timer-display">
-                        <div class="time" id="time">25:00</div>
-                        <div class="session-type" id="sessionType">专注时间</div>
+                        <div class="time-circle">
+                            <div class="time-text" id="timeDisplay">25:00</div>
+                            <div class="timer-progress" id="timerProgress"></div>
+                        </div>
                     </div>
                     
                     <div class="timer-controls">
-                        <button id="startBtn" class="timer-button primary">开始</button>
-                        <button id="pauseBtn" class="timer-button" disabled>暂停</button>
-                        <button id="resetBtn" class="timer-button">重置</button>
+                        <button class="btn btn-primary" id="startBtn">开始</button>
+                        <button class="btn btn-secondary" id="pauseBtn" disabled>暂停</button>
+                        <button class="btn btn-danger" id="resetBtn">重置</button>
                     </div>
-                    
-                    <div class="timer-settings">
-                        <div class="setting">
-                            <label for="workDuration">专注时间 (分钟):</label>
-                            <input type="number" id="workDuration" min="1" max="60" value="25">
+                </div>
+
+                <div class="pomodoro-settings">
+                    <h3>设置</h3>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label for="workTime">工作时间 (分钟)</label>
+                            <input type="number" id="workTime" value="25" min="1" max="60">
                         </div>
-                        
-                        <div class="setting">
-                            <label for="breakDuration">休息时间 (分钟):</label>
-                            <input type="number" id="breakDuration" min="1" max="30" value="5">
+                        <div class="setting-item">
+                            <label for="breakTime">休息时间 (分钟)</label>
+                            <input type="number" id="breakTime" value="5" min="1" max="30">
+                        </div>
+                        <div class="setting-item">
+                            <label for="longBreakTime">长休息时间 (分钟)</label>
+                            <input type="number" id="longBreakTime" value="15" min="5" max="60">
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="pomodoro-stats">
                     <h3>今日统计</h3>
-                    <div class="stats-container">
+                    <div class="stats-grid">
                         <div class="stat-item">
-                            <span class="stat-value" id="completedPomodoros">0</span>
-                            <span class="stat-label">完成番茄钟</span>
+                            <div class="stat-number" id="completedSessions">0</div>
+                            <div class="stat-label">完成番茄</div>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-value" id="totalTime">0</span>
-                            <span class="stat-label">专注分钟</span>
+                            <div class="stat-number" id="totalTime">0</div>
+                            <div class="stat-label">总时间 (分钟)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="currentStreak">0</div>
+                            <div class="stat-label">连续天数</div>
                         </div>
                     </div>
+                </div>
+
+                <div class="pomodoro-tips">
+                    <h3>💡 番茄钟使用技巧</h3>
+                    <ul>
+                        <li>选择一个任务，专注25分钟</li>
+                        <li>时间到了就休息5分钟</li>
+                        <li>每4个番茄后休息15-30分钟</li>
+                        <li>避免在番茄时间内被打断</li>
+                        <li>记录你的专注时间和效率</li>
+                    </ul>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- 页脚 -->
-    <footer class="footer">
-        <div class="footer-container">
-            <p>&copy; 2024 AI Hub. 保留所有权利。</p>
-        </div>
-    </footer>
-
-    <script src="../common/script.js"></script>
     <script src="pomodoro.js"></script>
 </body>
 </html>

@@ -15,8 +15,9 @@
             </div>
             <div class="nav-menu">
                 <a href="../../index.html" class="nav-link">首页</a>
-                <a href="../chat/chat.html" class="nav-link">AI聊天</a>
-                <a href="../fortune/fortune.html" class="nav-link">星座运势</a>
+                <a href="../pomodoro/pomodoro.html" class="nav-link">番茄钟</a>
+                <a href="vocabulary.html" class="nav-link active">单词本</a>
+                <a href="../quotes/quotes.html" class="nav-link">一言</a>
                 <a href="../games/index.html" class="nav-link">AI游戏</a>
             </div>
         </div>
@@ -25,66 +26,85 @@
     <!-- 主要内容 -->
     <main class="main-content">
         <section class="vocabulary-section">
-            <div class="vocabulary-container">
+            <div class="container">
                 <div class="vocabulary-header">
-                    <h2>单词本</h2>
-                    <p>记录和复习您的词汇学习</p>
+                    <h1>📚 四级单词本</h1>
+                    <p>每天学习新单词，提升英语水平</p>
                 </div>
-                
-                <div class="vocabulary-input">
-                    <div class="form-group">
-                        <label for="word">单词</label>
-                        <input type="text" id="word" placeholder="输入单词">
+
+                <div class="word-card" id="wordCard">
+                    <div class="word-display">
+                        <h2 class="word-text" id="wordText">Loading...</h2>
+                        <div class="word-phonetic" id="wordPhonetic"></div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="definition">释义</label>
-                        <textarea id="definition" placeholder="输入单词释义"></textarea>
+                    <div class="word-meaning" id="wordMeaning">
+                        <p>点击"显示释义"查看单词含义</p>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="example">例句</label>
-                        <textarea id="example" placeholder="输入例句"></textarea>
-                    </div>
-                    
-                    <button id="addWord" class="vocab-button primary">添加单词</button>
-                </div>
-                
-                <div class="vocabulary-list">
-                    <h3>我的单词本</h3>
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="搜索单词...">
-                    </div>
-                    <div class="words-container" id="wordsContainer">
-                        <div class="empty-state">暂无单词，添加您的第一个单词吧！</div>
+                    <div class="word-example" id="wordExample" style="display: none;">
+                        <h4>例句：</h4>
+                        <p></p>
                     </div>
                 </div>
-                
+
+                <div class="word-controls">
+                    <button class="btn btn-primary" id="showMeaningBtn">显示释义</button>
+                    <button class="btn btn-secondary" id="nextWordBtn">下一个单词</button>
+                    <button class="btn btn-success" id="addToFavoritesBtn">收藏</button>
+                </div>
+
                 <div class="vocabulary-stats">
                     <h3>学习统计</h3>
-                    <div class="stats-container">
+                    <div class="stats-grid">
                         <div class="stat-item">
-                            <span class="stat-value" id="totalWords">0</span>
-                            <span class="stat-label">总单词数</span>
+                            <div class="stat-number" id="todayLearned">0</div>
+                            <div class="stat-label">今日学习</div>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-value" id="todayWords">0</span>
-                            <span class="stat-label">今日添加</span>
+                            <div class="stat-number" id="totalLearned">0</div>
+                            <div class="stat-label">累计学习</div>
                         </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="favoritesCount">0</div>
+                            <div class="stat-label">收藏单词</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vocabulary-settings">
+                    <h3>设置</h3>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label for="dailyGoal">每日目标</label>
+                            <select id="dailyGoal">
+                                <option value="10">10个单词</option>
+                                <option value="20" selected>20个单词</option>
+                                <option value="30">30个单词</option>
+                                <option value="50">50个单词</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label for="difficulty">难度等级</label>
+                            <select id="difficulty">
+                                <option value="easy">简单</option>
+                                <option value="medium" selected>中等</option>
+                                <option value="hard">困难</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="favorites-section">
+                    <h3>我的收藏</h3>
+                    <div class="favorites-list" id="favoritesList">
+                        <p class="empty-message">还没有收藏的单词</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- 页脚 -->
-    <footer class="footer">
-        <div class="footer-container">
-            <p>&copy; 2024 AI Hub. 保留所有权利。</p>
-        </div>
-    </footer>
-
-    <script src="../common/script.js"></script>
     <script src="vocabulary.js"></script>
 </body>
 </html>
