@@ -14,23 +14,42 @@ class WoodenFish {
     }
 
     initElements() {
+        // 计数器元素
         this.counterNumber = document.getElementById('counterNumber');
         this.woodenFish = document.getElementById('woodenFish');
         this.fishStick = document.getElementById('fishStick');
+        
+        // 按钮元素
         this.tapBtn = document.getElementById('tapBtn');
         this.resetBtn = document.getElementById('resetBtn');
+        this.exitFishModeBtn = document.getElementById('exitFishModeBtn');
+        this.leisureBtn = document.getElementById('leisureBtn');
+        
+        // 统计元素
         this.totalTapsEl = document.getElementById('totalTaps');
         this.todayTapsEl = document.getElementById('todayTaps');
         this.fishModeCountEl = document.getElementById('fishModeCount');
+        
+        // 模式元素
         this.fishMode = document.getElementById('fishMode');
-        this.exitFishModeBtn = document.getElementById('exitFishModeBtn');
         this.plusOne = document.getElementById('plusOne');
     }
 
     bindEvents() {
+        // 敲击木鱼事件
         this.tapBtn.addEventListener('click', () => this.tapFish());
+        
+        // 重置功德事件
         this.resetBtn.addEventListener('click', () => this.resetCounter());
+        
+        // 退出摸鱼模式事件
         this.exitFishModeBtn.addEventListener('click', () => this.exitFishMode());
+        
+        // 休闲放松事件
+        this.leisureBtn.addEventListener('click', () => this.leisureMode());
+        
+        // 木鱼点击事件
+        this.woodenFish.addEventListener('click', () => this.tapFish());
         
         // 键盘支持
         document.addEventListener('keydown', (e) => {
@@ -55,77 +74,7 @@ class WoodenFish {
         this.playSound();
         
         // 显示+1动效
-            // 适配美化后的UI结构，确保功能正常
-            // 主要是选择器和交互逻辑
-            document.addEventListener('DOMContentLoaded', function() {
-                const gongdeEl = document.getElementById('gongde');
-                const muyuBtn = document.getElementById('muyu-btn');
-                const resetBtn = document.getElementById('reset-btn');
-                const totalCountEl = document.getElementById('total-count');
-                const todayCountEl = document.getElementById('today-count');
-                const moyuCountEl = document.getElementById('moyu-count');
-                const moyuModeEl = document.getElementById('moyu-mode');
-                const continueBtn = document.getElementById('continue-btn');
-
-                let gongde = 100;
-                let totalCount = 200;
-                let todayCount = 200;
-                let moyuCount = 2;
-                let inMoyuMode = false;
-
-                function updateStats() {
-                    gongdeEl.textContent = gongde + ' 功德';
-                    totalCountEl.textContent = totalCount;
-                    todayCountEl.textContent = todayCount;
-                    moyuCountEl.textContent = moyuCount;
-                }
-
-                function enterMoyuMode() {
-                    inMoyuMode = true;
-                    moyuModeEl.style.display = '';
-                    muyuBtn.disabled = true;
-                    muyuBtn.textContent = '摸鱼中...';
-                    moyuCount++;
-                    updateStats();
-                }
-
-                function exitMoyuMode() {
-                    inMoyuMode = false;
-                    moyuModeEl.style.display = 'none';
-                    muyuBtn.disabled = false;
-                    muyuBtn.textContent = '敲木鱼';
-                    gongde = 0;
-                    updateStats();
-                }
-
-                muyuBtn.addEventListener('click', function() {
-                    if (inMoyuMode) return;
-                    gongde++;
-                    totalCount++;
-                    todayCount++;
-                    updateStats();
-                    if (gongde >= 100) {
-                        enterMoyuMode();
-                    } else {
-                        muyuBtn.textContent = '敲木鱼';
-                    }
-                });
-
-                resetBtn.addEventListener('click', function() {
-                    gongde = 0;
-                    updateStats();
-                    muyuBtn.disabled = false;
-                    muyuBtn.textContent = '敲木鱼';
-                    moyuModeEl.style.display = 'none';
-                    inMoyuMode = false;
-                });
-
-                continueBtn.addEventListener('click', function() {
-                    exitMoyuMode();
-                });
-
-                updateStats();
-            });
+        this.showPlusOne();
         
         // 更新显示
         this.updateDisplay();
@@ -180,23 +129,27 @@ class WoodenFish {
     }
 
     showPlusOne() {
-        // 重置+1动效位置
-        this.plusOne.style.left = '50%';
-        this.plusOne.style.top = '50%';
+        // 随机位置显示+1动效
+        const fishRect = this.woodenFish.getBoundingClientRect();
+        const x = fishRect.left + fishRect.width / 2;
+        const y = fishRect.top + fishRect.height / 2;
+        
+        this.plusOne.style.left = x + 'px';
+        this.plusOne.style.top = y + 'px';
         this.plusOne.style.opacity = '1';
         this.plusOne.style.transform = 'translate(-50%, -50%) scale(1)';
         
         // 动画效果
         setTimeout(() => {
             this.plusOne.style.opacity = '0';
-            this.plusOne.style.transform = 'translate(-50%, -60%) scale(1.5)';
+            this.plusOne.style.transform = 'translate(-50%, -80%) scale(1.5)';
         }, 100);
     }
 
     enterFishMode() {
         this.isFishMode = true;
         this.fishModeCount++;
-        this.fishMode.style.display = 'block';
+        this.fishMode.style.display = 'flex';
         
         // 播放进入摸鱼模式的音效
         this.playFishModeSound();
@@ -214,10 +167,19 @@ class WoodenFish {
         this.saveData();
     }
 
+    leisureMode() {
+        // 休闲模式可以添加更多功能，这里简单提示
+        this.showNotification('休闲放松中...', 'info');
+        setTimeout(() => {
+            this.exitFishMode();
+        }, 3000);
+    }
+
     resetCounter() {
         this.counter = 0;
         this.updateDisplay();
         this.saveData();
+        this.showNotification('功德已重置', 'success');
     }
 
     updateDisplay() {
@@ -253,6 +215,21 @@ class WoodenFish {
         } catch (error) {
             console.log('音频播放失败:', error);
         }
+    }
+
+    showNotification(message, type = 'info') {
+        // 创建通知元素
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.textContent = message;
+        
+        // 添加到页面
+        document.body.appendChild(notification);
+        
+        // 3秒后移除
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
     }
 
     loadData() {
