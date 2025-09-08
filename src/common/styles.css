@@ -1272,63 +1272,79 @@ a {
 
 .fish-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .fish-header h1 {
     font-size: 2.5rem;
     color: #333;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .fish-header p {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: #666;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-.fish-counter {
+/* 功德计数器 */
+.merit-section {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
-.counter-display {
-    display: inline-block;
+.merit-display {
+    display: flex;
+    justify-content: center;
+}
+
+.merit-circle {
+    width: 180px;
+    height: 180px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     color: white;
-    padding: 2rem 3rem;
-    border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
     animation: pulse 2s infinite;
 }
 
-.counter-number {
-    display: block;
-    font-size: 4rem;
+.merit-number {
+    font-size: 3.5rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.counter-label {
+.merit-label {
     font-size: 1.2rem;
     opacity: 0.9;
 }
 
-.fish-container {
-    position: relative;
+/* 木鱼区域 */
+.fish-area {
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin: 3rem 0;
-    min-height: 300px;
+    margin: 2rem 0;
+}
+
+.wooden-fish-container {
+    position: relative;
+    width: 250px;
+    height: 200px;
 }
 
 .wooden-fish {
-    position: relative;
+    position: absolute;
     width: 200px;
     height: 150px;
     cursor: pointer;
     transition: transform 0.1s ease;
+    z-index: 2;
 }
 
 .wooden-fish:hover {
@@ -1355,8 +1371,8 @@ a {
 }
 
 .eye {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     background: white;
     border-radius: 50%;
     position: relative;
@@ -1369,8 +1385,8 @@ a {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     background: black;
     border-radius: 50%;
 }
@@ -1380,13 +1396,13 @@ a {
     bottom: 20%;
     left: 50%;
     transform: translateX(-50%);
-    width: 40px;
-    height: 20px;
+    width: 30px;
+    height: 15px;
     background: #654321;
-    border-radius: 0 0 20px 20px;
+    border-radius: 0 0 15px 15px;
 }
 
-.fish-pattern {
+.fish-lines {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -1396,20 +1412,20 @@ a {
     background: repeating-linear-gradient(
         45deg,
         transparent,
-        transparent 10px,
-        rgba(255, 255, 255, 0.1) 10px,
-        rgba(255, 255, 255, 0.1) 20px
+        transparent 8px,
+        rgba(255, 255, 255, 0.1) 8px,
+        rgba(255, 255, 255, 0.1) 16px
     );
     border-radius: 50%;
 }
 
 .fish-tail {
     position: absolute;
-    right: -30px;
+    right: -25px;
     top: 50%;
     transform: translateY(-50%);
-    width: 60px;
-    height: 80px;
+    width: 50px;
+    height: 70px;
     background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
     border-radius: 50% 0 0 50%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -1418,24 +1434,25 @@ a {
 
 .fish-stick {
     position: absolute;
-    right: 50px;
-    top: 20px;
-    width: 8px;
-    height: 120px;
+    right: 60px;
+    top: 15px;
+    width: 6px;
+    height: 100px;
     transform-origin: bottom center;
     transition: transform 0.1s ease;
+    z-index: 1;
 }
 
 .stick-handle {
     width: 100%;
     height: 80%;
     background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
-    border-radius: 4px;
+    border-radius: 3px;
 }
 
 .stick-head {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
     border-radius: 50%;
     position: absolute;
@@ -1445,92 +1462,135 @@ a {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
+/* 控制按钮 */
 .fish-controls {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-bottom: 3rem;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
     flex-wrap: wrap;
 }
 
-.fish-stats {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.btn-large {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.fish-stats h3 {
+.btn-icon {
+    font-size: 1.2rem;
+}
+
+/* 修行统计 */
+.practice-stats {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.practice-stats h3 {
     margin-top: 0;
     color: #333;
     text-align: center;
+    margin-bottom: 1.5rem;
 }
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
 }
 
-.stat-item {
-    text-align: center;
-    padding: 1rem;
+.stat-card {
+    display: flex;
+    align-items: center;
+    padding: 1.2rem;
     background: #f8f9fa;
-    border-radius: 8px;
+    border-radius: 12px;
+    transition: transform 0.2s ease;
 }
 
-.stat-number {
-    font-size: 1.5rem;
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1.8rem;
     font-weight: bold;
     color: #667eea;
+    margin-bottom: 0.2rem;
 }
 
 .stat-label {
     font-size: 0.9rem;
     color: #666;
-    margin-top: 0.5rem;
 }
 
-.fish-tips {
+/* 修行指南 */
+.practice-guide {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.practice-guide h3 {
+    margin-top: 0;
+    color: #333;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.guide-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.guide-card {
+    display: flex;
+    align-items: flex-start;
+    padding: 1.5rem;
     background: #f8f9fa;
     border-radius: 12px;
-    padding: 2rem;
-    margin-top: 2rem;
+    transition: transform 0.2s ease;
 }
 
-.fish-tips h3 {
+.guide-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.guide-icon {
+    font-size: 1.8rem;
+    margin-right: 1rem;
+    margin-top: 0.2rem;
+}
+
+.guide-content h4 {
     margin-top: 0;
+    margin-bottom: 0.5rem;
     color: #333;
 }
 
-.fish-tips ul {
-    list-style: none;
-    padding: 0;
-}
-
-.fish-tips li {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #eee;
-    position: relative;
-    padding-left: 1.5rem;
-}
-
-.fish-tips li::before {
-    content: "✓";
-    color: #28a745;
-    position: absolute;
-    left: 0;
-    font-weight: bold;
-}
-
-.fish-tips li:last-child {
-    border-bottom: none;
-}
-
-.fish-tips li:last-child {
-    border-bottom: none;
+.guide-content p {
+    margin: 0;
+    color: #666;
+    font-size: 0.95rem;
 }
 
 /* 摸鱼模式样式 */
@@ -1540,44 +1600,102 @@ a {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 10000;
 }
 
+.fish-mode-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+}
+
 .fish-mode-content {
     background: white;
     border-radius: 20px;
-    padding: 3rem;
+    padding: 2.5rem;
     text-align: center;
     max-width: 500px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     animation: modalAppear 0.3s ease-out;
+    position: relative;
+    z-index: 10001;
 }
 
-.fish-mode-content h2 {
+.fish-mode-header h2 {
     color: #333;
     margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
 }
 
-.fish-mode-content p {
+.fish-mode-header p {
     color: #666;
     font-size: 1.1rem;
     margin-bottom: 2rem;
 }
 
-.fish-swimming {
+.fish-animation {
     position: relative;
-    height: 100px;
+    height: 120px;
     margin: 2rem 0;
     overflow: hidden;
 }
 
 .swimming-fish {
     font-size: 3rem;
-    animation: swim 3s ease-in-out infinite;
+    position: absolute;
+    top: 50%;
+    left: -10%;
+    transform: translateY(-50%);
+    animation: swim 8s linear infinite;
+}
+
+.bubbles-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+}
+
+.bubble {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: rgba(102, 126, 234, 0.3);
+    border-radius: 50%;
+    animation: bubble 4s ease-in infinite;
+}
+
+.bubble:nth-child(1) {
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.bubble:nth-child(2) {
+    left: 30%;
+    animation-delay: 1s;
+}
+
+.bubble:nth-child(3) {
+    left: 50%;
+    animation-delay: 2s;
+}
+
+.bubble:nth-child(4) {
+    left: 70%;
+    animation-delay: 0.5s;
+}
+
+.bubble:nth-child(5) {
+    left: 90%;
+    animation-delay: 1.5s;
 }
 
 .fish-mode-buttons {
@@ -1585,7 +1703,105 @@ a {
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
+}
+
+/* +1 动效样式 */
+.plus-one {
+    position: fixed;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #10b981;
+    pointer-events: none;
+    z-index: 1000;
+    transition: all 0.5s ease;
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+/* 动画关键帧 */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.6);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes blink {
+    0%, 45%, 55%, 100% {
+        height: 16px;
+    }
+    50% {
+        height: 2px;
+    }
+}
+
+@keyframes wiggle {
+    0%, 100% {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-50%) rotate(5deg);
+    }
+    75% {
+        transform: translateY(-50%) rotate(-5deg);
+    }
+}
+
+@keyframes modalAppear {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes swim {
+    0% {
+        left: -10%;
+    }
+    100% {
+        left: 110%;
+    }
+}
+
+@keyframes bubble {
+    0% {
+        transform: translateY(0) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) scale(1);
+        opacity: 0;
+    }
 }
 
 .fish-swimming {

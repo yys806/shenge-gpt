@@ -229,7 +229,9 @@ class WoodenFish {
         
         // 3秒后移除
         setTimeout(() => {
-            notification.remove();
+            if (notification.parentNode) {
+                notification.remove();
+            }
         }, 3000);
     }
 
