@@ -1266,11 +1266,24 @@ a {
 /* 电子木鱼样式 */
 .wooden-fish-section {
     padding: 2rem 0;
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    min-height: 100vh;
 }
 
 .fish-header {
     text-align: center;
     margin-bottom: 3rem;
+}
+
+.fish-header h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.fish-header p {
+    font-size: 1.2rem;
+    color: #666;
 }
 
 .fish-counter {
@@ -1285,6 +1298,7 @@ a {
     padding: 2rem 3rem;
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    animation: pulse 2s infinite;
 }
 
 .counter-number {
@@ -1292,6 +1306,7 @@ a {
     font-size: 4rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .counter-label {
@@ -1316,6 +1331,10 @@ a {
     transition: transform 0.1s ease;
 }
 
+.wooden-fish:hover {
+    transform: scale(1.05);
+}
+
 .fish-body {
     width: 100%;
     height: 100%;
@@ -1323,6 +1342,7 @@ a {
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
     position: relative;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    animation: float 3s ease-in-out infinite;
 }
 
 .fish-eyes {
@@ -1340,6 +1360,7 @@ a {
     background: white;
     border-radius: 50%;
     position: relative;
+    animation: blink 5s infinite;
 }
 
 .eye::after {
@@ -1392,6 +1413,7 @@ a {
     background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
     border-radius: 50% 0 0 50%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: wiggle 2s ease-in-out infinite;
 }
 
 .fish-stick {
@@ -1428,6 +1450,7 @@ a {
     justify-content: center;
     gap: 1rem;
     margin-bottom: 3rem;
+    flex-wrap: wrap;
 }
 
 .fish-stats {
@@ -1438,11 +1461,48 @@ a {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.fish-stats h3 {
+    margin-top: 0;
+    color: #333;
+    text-align: center;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
 .fish-tips {
     background: #f8f9fa;
     border-radius: 12px;
     padding: 2rem;
     margin-top: 2rem;
+}
+
+.fish-tips h3 {
+    margin-top: 0;
+    color: #333;
 }
 
 .fish-tips ul {
@@ -1453,6 +1513,20 @@ a {
 .fish-tips li {
     padding: 0.5rem 0;
     border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.fish-tips li::before {
+    content: "✓";
+    color: #28a745;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.fish-tips li:last-child {
+    border-bottom: none;
 }
 
 .fish-tips li:last-child {
@@ -1467,7 +1541,7 @@ a {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 10000;
@@ -1480,6 +1554,38 @@ a {
     text-align: center;
     max-width: 500px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: modalAppear 0.3s ease-out;
+}
+
+.fish-mode-content h2 {
+    color: #333;
+    margin-top: 0;
+}
+
+.fish-mode-content p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.fish-swimming {
+    position: relative;
+    height: 100px;
+    margin: 2rem 0;
+    overflow: hidden;
+}
+
+.swimming-fish {
+    font-size: 3rem;
+    animation: swim 3s ease-in-out infinite;
+}
+
+.fish-mode-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
 }
 
 .fish-swimming {
@@ -1609,6 +1715,66 @@ a {
     }
     to {
         transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 木鱼游戏增强样式 */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes blink {
+    0%, 45%, 55%, 100% {
+        height: 20px;
+    }
+    50% {
+        height: 2px;
+    }
+}
+
+@keyframes wiggle {
+    0%, 100% {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-50%) rotate(5deg);
+    }
+    75% {
+        transform: translateY(-50%) rotate(-5deg);
+    }
+}
+
+@keyframes modalAppear {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
         opacity: 1;
     }
 }

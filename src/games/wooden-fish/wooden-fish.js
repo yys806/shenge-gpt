@@ -165,11 +165,12 @@ class WoodenFish {
         this.fishMode.style.display = 'none';
         this.updateDisplay();
         this.saveData();
+        this.showNotification('已退出摸鱼模式，功德已重置', 'success');
     }
 
     leisureMode() {
         // 休闲模式可以添加更多功能，这里简单提示
-        this.showNotification('休闲放松中...', 'info');
+        this.showNotification('休闲放松中...功德继续累积', 'info');
         setTimeout(() => {
             this.exitFishMode();
         }, 3000);
