@@ -31,18 +31,8 @@
                     <p>敲击木鱼，净化心灵，积累功德</p>
                 </div>
 
-                <!-- 功德计数器 -->
-                <div class="merit-section">
-                    <div class="merit-display">
-                        <div class="merit-circle">
-                            <span class="merit-number" id="counterNumber">0</span>
-                            <span class="merit-label">功德</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 木鱼区域 -->
-                <div class="fish-area">
+                <!-- 木鱼主区域 - 居中显示 -->
+                <div class="fish-main-area">
                     <div class="wooden-fish-container">
                         <div class="wooden-fish" id="woodenFish">
                             <div class="fish-body">
@@ -59,19 +49,29 @@
                             <div class="stick-handle"></div>
                             <div class="stick-head"></div>
                         </div>
+                        
+                        <!-- 控制按钮 - 在木鱼下方 -->
+                        <div class="fish-controls">
+                            <button class="btn btn-primary btn-large" id="tapBtn">
+                                <span class="btn-text">敲击木鱼</span>
+                                <span class="btn-icon">🪨</span>
+                            </button>
+                            <button class="btn btn-secondary btn-large" id="resetBtn">
+                                <span class="btn-text">重置功德</span>
+                                <span class="btn-icon">🔄</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 控制按钮 -->
-                <div class="fish-controls">
-                    <button class="btn btn-primary btn-large" id="tapBtn">
-                        <span class="btn-text">敲击木鱼</span>
-                        <span class="btn-icon">🪨</span>
-                    </button>
-                    <button class="btn btn-secondary btn-large" id="resetBtn">
-                        <span class="btn-text">重置功德</span>
-                        <span class="btn-icon">🔄</span>
-                    </button>
+                <!-- 功德计数器 -->
+                <div class="merit-section">
+                    <div class="merit-display">
+                        <div class="merit-circle">
+                            <span class="merit-number" id="counterNumber">0</span>
+                            <span class="merit-label">功德</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 修行统计 -->
@@ -132,12 +132,11 @@
             </div>
         </section>
 
-        <!-- 摸鱼模式 -->
-        <div class="fish-mode" id="fishMode">
-            <div class="fish-mode-overlay"></div>
+        <!-- 摸鱼模式界面 -->
+        <div class="fish-mode-page" id="fishModePage">
             <div class="fish-mode-content">
                 <div class="fish-mode-header">
-                    <h2>🐠 摸鱼模式</h2>
+                    <h1>🐠 摸鱼模式</h1>
                     <p>功德圆满！进入放松摸鱼模式</p>
                 </div>
                 <div class="fish-animation">
@@ -149,6 +148,27 @@
                         <div class="bubble"></div>
                         <div class="bubble"></div>
                     </div>
+                </div>
+                <!-- 在摸鱼模式中添加木鱼元素 -->
+                <div class="wooden-fish-container fish-mode-fish">
+                    <div class="wooden-fish" id="fishModeWoodenFish">
+                        <div class="fish-body">
+                            <div class="fish-eyes">
+                                <div class="eye left-eye"></div>
+                                <div class="eye right-eye"></div>
+                            </div>
+                            <div class="fish-mouth"></div>
+                            <div class="fish-lines"></div>
+                        </div>
+                        <div class="fish-tail"></div>
+                    </div>
+                    <div class="fish-stick" id="fishModeFishStick">
+                        <div class="stick-handle"></div>
+                        <div class="stick-head"></div>
+                    </div>
+                </div>
+                <div class="fish-mode-stats">
+                    <h3>当前功德: <span id="fishModeMerit">0</span></h3>
                 </div>
                 <div class="fish-mode-buttons">
                     <button class="btn btn-success btn-large" id="exitFishModeBtn">

@@ -31,8 +31,13 @@ class WoodenFish {
         this.fishModeCountEl = document.getElementById('fishModeCount');
         
         // 模式元素
-        this.fishMode = document.getElementById('fishMode');
+        this.fishMode = document.getElementById('fishModePage');
         this.plusOne = document.getElementById('plusOne');
+        
+        // 摸鱼模式中的木鱼元素
+        this.fishModeWoodenFish = document.getElementById('fishModeWoodenFish');
+        this.fishModeFishStick = document.getElementById('fishModeFishStick');
+        this.fishModeMerit = document.getElementById('fishModeMerit');
     }
 
     bindEvents() {
@@ -51,9 +56,14 @@ class WoodenFish {
         // 木鱼点击事件
         this.woodenFish.addEventListener('click', () => this.tapFish());
         
+        // 摸鱼模式中的木鱼点击事件
+        if (this.fishModeWoodenFish) {
+            this.fishModeWoodenFish.addEventListener('click', () => this.tapFish());
+        }
+        
         // 键盘支持
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && !this.isFishMode) {
+            if (e.code === 'Space') {
                 e.preventDefault();
                 this.tapFish();
             }
@@ -61,8 +71,6 @@ class WoodenFish {
     }
 
     tapFish() {
-        if (this.isFishMode) return;
-        
         this.counter++;
         this.totalTaps++;
         this.todayTaps++;
@@ -79,8 +87,8 @@ class WoodenFish {
         // 更新显示
         this.updateDisplay();
         
-        // 检查是否进入摸鱼模式
-        if (this.counter >= 100) {
+        // 检查是否进入摸鱼模式（仅在非摸鱼模式下检查）
+        if (!this.isFishMode && this.counter >= 100) {
             this.enterFishMode();
         }
         
@@ -96,6 +104,25 @@ class WoodenFish {
         // 木槌敲击动画
         this.fishStick.style.transform = 'rotate(-15deg) translateY(-5px)';
         this.fishStick.style.transition = 'transform 0.1s ease';
+        
+        // 如果在摸鱼模式中，也对摸鱼模式的木鱼进行动画
+        if (this.isFishMode && this.fishModeWoodenFish) {
+            this.fishModeWoodenFish.style.transform = 'scale(0.95)';
+            this.fishModeWoodenFish.style.transition = 'transform 0.1s ease';
+            
+            // 摸鱼模式中的木槌动画
+            if (this.fishModeFishStick) {
+                this.fishModeFishStick.style.transform = 'rotate(-15deg) translateY(-5px)';
+                this.fishModeFishStick.style.transition = 'transform 0.1s ease';
+            }
+            
+            setTimeout(() => {
+                this.fishModeWoodenFish.style.transform = 'scale(1)';
+                if (this.fishModeFishStick) {
+                    this.fishModeFishStick.style.transform = 'rotate(0deg) translateY(0px)';
+                }
+            }, 100);
+        }
         
         setTimeout(() => {
             this.woodenFish.style.transform = 'scale(1)';
@@ -129,8 +156,15 @@ class WoodenFish {
     }
 
     showPlusOne() {
-        // 随机位置显示+1动效
-        const fishRect = this.woodenFish.getBoundingClientRect();
+        let fishRect;
+        
+        // 如果在摸鱼模式中，使用摸鱼模式的木鱼位置
+        if (this.isFishMode && this.fishModeWoodenFish) {
+            fishRect = this.fishModeWoodenFish.getBoundingClientRect();
+        } else {
+            fishRect = this.woodenFish.getBoundingClientRect();
+        }
+        
         const x = fishRect.left + fishRect.width / 2;
         const y = fishRect.top + fishRect.height / 2;
         
@@ -161,19 +195,15 @@ class WoodenFish {
 
     exitFishMode() {
         this.isFishMode = false;
-        this.counter = 0;
         this.fishMode.style.display = 'none';
         this.updateDisplay();
         this.saveData();
-        this.showNotification('已退出摸鱼模式，功德已重置', 'success');
+        this.showNotification('已退出摸鱼模式', 'success');
     }
 
     leisureMode() {
         // 休闲模式可以添加更多功能，这里简单提示
         this.showNotification('休闲放松中...功德继续累积', 'info');
-        setTimeout(() => {
-            this.exitFishMode();
-        }, 3000);
     }
 
     resetCounter() {
@@ -188,6 +218,11 @@ class WoodenFish {
         this.totalTapsEl.textContent = this.totalTaps;
         this.todayTapsEl.textContent = this.todayTaps;
         this.fishModeCountEl.textContent = this.fishModeCount;
+        
+        // 更新摸鱼模式中的功德显示
+        if (this.fishModeMerit) {
+            this.fishModeMerit.textContent = this.counter;
+        }
         
         // 更新按钮状态
         this.tapBtn.disabled = this.isFishMode;

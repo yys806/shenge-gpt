@@ -1332,19 +1332,31 @@ a {
     margin: 2rem 0;
 }
 
+.fish-main-area {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+    flex-direction: column;
+    align-items: center;
+}
+
 .wooden-fish-container {
     position: relative;
-    width: 250px;
-    height: 200px;
+    width: 300px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .wooden-fish {
-    position: absolute;
-    width: 200px;
-    height: 150px;
+    position: relative;
+    width: 250px;
+    height: 200px;
     cursor: pointer;
     transition: transform 0.1s ease;
     z-index: 2;
+    margin-bottom: 20px;
 }
 
 .wooden-fish:hover {
@@ -1359,6 +1371,15 @@ a {
     position: relative;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     animation: float 3s ease-in-out infinite;
+}
+
+/* 控制按钮 */
+.fish-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
 }
 
 .fish-eyes {
@@ -1594,7 +1615,7 @@ a {
 }
 
 /* 摸鱼模式样式 */
-.fish-mode {
+.fish-mode-page {
     position: fixed;
     top: 0;
     left: 0;
@@ -1604,6 +1625,37 @@ a {
     justify-content: center;
     align-items: center;
     z-index: 10000;
+}
+
+.fish-mode-content {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    text-align: center;
+    max-width: 500px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: modalAppear 0.3s ease-out;
+    position: relative;
+    z-index: 10001;
+}
+
+/* 摸鱼模式中的木鱼样式 */
+.fish-mode-fish {
+    width: 200px;
+    height: 180px;
+    margin: 1rem auto;
+}
+
+.fish-mode-fish .wooden-fish {
+    width: 180px;
+    height: 150px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.fish-mode-fish .wooden-fish:hover {
+    transform: scale(1.05);
 }
 
 .fish-mode-overlay {
