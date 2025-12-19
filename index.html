@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
@@ -30,18 +30,24 @@
         min-height: 100vh;
         font-family: "VT323", "Courier New", monospace;
         background: radial-gradient(
-            circle at 10% 10%,
-            rgba(0, 243, 255, 0.15),
+            circle at 12% 12%,
+            rgba(0, 243, 255, 0.18),
             transparent 45%
           ),
           radial-gradient(
-            circle at 90% 15%,
-            rgba(189, 0, 255, 0.12),
+            circle at 85% 18%,
+            rgba(189, 0, 255, 0.14),
             transparent 40%
           ),
           linear-gradient(140deg, #050505 10%, #0b0b0b 45%, #050505 100%);
         color: var(--text);
-        letter-spacing: 0.5px;
+        letter-spacing: 0.6px;
+        transition: transform 0.6s ease;
+        transform-origin: center;
+      }
+
+      body.override {
+        transform: rotate(180deg);
       }
 
       .scanlines {
@@ -50,19 +56,19 @@
         pointer-events: none;
         background: repeating-linear-gradient(
           to bottom,
-          rgba(255, 255, 255, 0.05),
+          rgba(255, 255, 255, 0.04),
           rgba(255, 255, 255, 0.02) 2px,
           rgba(0, 0, 0, 0.12) 4px
         );
         mix-blend-mode: overlay;
         opacity: 0.3;
-        z-index: 10;
+        z-index: 5;
       }
 
       .app {
         max-width: 1280px;
         margin: 0 auto;
-        padding: 32px 24px 48px;
+        padding: 32px 24px 110px;
       }
 
       header {
@@ -116,10 +122,6 @@
         text-shadow: 0 0 10px rgba(0, 243, 255, 0.6);
       }
 
-      .panel small {
-        color: var(--muted);
-      }
-
       .memory-input {
         display: flex;
         gap: 10px;
@@ -169,6 +171,16 @@
         animation: glitch 0.6s infinite;
       }
 
+      .btn.secondary {
+        border-color: rgba(0, 243, 255, 0.55);
+        box-shadow: 0 0 10px rgba(0, 243, 255, 0.25);
+      }
+
+      .btn.secondary:hover {
+        border-color: var(--purple);
+        box-shadow: 0 0 18px rgba(189, 0, 255, 0.45);
+      }
+
       .memory-hint {
         margin-bottom: 10px;
         color: var(--muted);
@@ -184,11 +196,13 @@
         border: 1px solid rgba(0, 243, 255, 0.45);
         background: rgba(8, 8, 8, 0.9);
         padding: 10px;
-        min-height: 100px;
+        min-height: 110px;
         position: relative;
         cursor: pointer;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         box-shadow: 0 0 12px rgba(0, 243, 255, 0.2);
+        display: flex;
+        flex-direction: column;
       }
 
       .data-block.code {
@@ -212,22 +226,72 @@
         font-size: 16px;
         margin-bottom: 6px;
         color: var(--muted);
+        gap: 8px;
       }
 
-      .tag {
+      .block-meta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .block-flag {
         font-size: 14px;
         color: var(--cyan);
         text-shadow: 0 0 6px rgba(0, 243, 255, 0.8);
       }
 
-      .tag.code {
+      .block-flag.code {
         color: var(--purple);
       }
 
+      .block-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .icon-btn {
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        font-size: 16px;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #0c0c0c;
+        border: 1px solid rgba(0, 243, 255, 0.6);
+        color: var(--cyan);
+        box-shadow: 0 0 8px rgba(0, 243, 255, 0.25);
+      }
+
+      .icon-btn.qr-btn {
+        color: var(--cyan);
+      }
+
+      .icon-btn.delete-btn {
+        border-color: rgba(255, 59, 106, 0.8);
+        color: var(--danger);
+        box-shadow: 0 0 8px rgba(255, 59, 106, 0.35);
+      }
+
+      .icon-btn:hover {
+        border-color: var(--purple);
+        color: var(--purple);
+        box-shadow: 0 0 12px rgba(189, 0, 255, 0.35);
+      }
+
+      .icon-btn.delete-btn:hover {
+        border-color: var(--danger);
+        color: var(--danger);
+        box-shadow: 0 0 12px rgba(255, 59, 106, 0.55);
+      }
       .block-content {
         font-size: 18px;
         white-space: pre-wrap;
         word-break: break-word;
+        margin-top: auto;
       }
 
       .shatter {
@@ -238,6 +302,7 @@
         display: flex;
         gap: 8px;
         margin-bottom: 16px;
+        flex-wrap: wrap;
       }
 
       .tab-btn.active {
@@ -263,6 +328,13 @@
         color: var(--muted);
       }
 
+      .file-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
       .file-label {
         display: inline-flex;
         align-items: center;
@@ -271,23 +343,6 @@
 
       .file-input {
         display: none;
-      }
-
-      .file-actions {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .btn.secondary {
-        border-color: rgba(0, 243, 255, 0.55);
-        box-shadow: 0 0 10px rgba(0, 243, 255, 0.25);
-      }
-
-      .btn.secondary:hover {
-        border-color: var(--purple);
-        box-shadow: 0 0 18px rgba(189, 0, 255, 0.45);
       }
 
       .preview {
@@ -338,7 +393,7 @@
       .toast {
         position: fixed;
         left: 50%;
-        bottom: 24px;
+        bottom: 90px;
         transform: translateX(-50%) translateY(20px);
         background: rgba(0, 0, 0, 0.85);
         border: 1px solid rgba(0, 255, 106, 0.8);
@@ -357,6 +412,184 @@
         transform: translateX(-50%) translateY(0);
       }
 
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.78);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 40;
+        padding: 16px;
+      }
+
+      .modal.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-panel {
+        width: min(360px, 92vw);
+        background: linear-gradient(160deg, #0e0e0e, #070707);
+        border: 1px solid rgba(0, 243, 255, 0.6);
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.25);
+        padding: 18px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .modal-panel h3 {
+        margin: 0 0 6px;
+        color: var(--cyan);
+      }
+
+      .modal-panel p {
+        margin: 0 0 12px;
+        color: var(--muted);
+      }
+
+      .modal-panel::before,
+      .modal-panel::after {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        opacity: 0;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        background: linear-gradient(
+          120deg,
+          rgba(0, 243, 255, 0.25),
+          rgba(189, 0, 255, 0.22)
+        );
+      }
+
+      .modal-panel.glitch-in {
+        animation: glitch-in 0.45s steps(2, end);
+      }
+
+      .modal-panel.glitch-in::before {
+        animation: rgb-shift 0.35s ease;
+      }
+
+      .modal-panel.glitch-in::after {
+        animation: rgb-shift 0.35s ease 0.1s;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+      }
+
+      .qr-image {
+        width: 150px;
+        height: 150px;
+        border: 1px solid rgba(0, 243, 255, 0.6);
+        background: #050505;
+        margin-bottom: 12px;
+        box-shadow: 0 0 12px rgba(0, 243, 255, 0.35);
+      }
+
+      .qr-text {
+        font-size: 16px;
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(189, 0, 255, 0.4);
+        padding: 8px;
+        max-height: 120px;
+        overflow: auto;
+        white-space: pre-wrap;
+      }
+
+      .override-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.92);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 60;
+        padding: 20px;
+      }
+
+      .override-modal.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .override-panel {
+        border: 1px solid rgba(0, 255, 106, 0.7);
+        padding: 24px;
+        max-width: 720px;
+        text-align: center;
+        background: rgba(0, 10, 0, 0.6);
+        box-shadow: 0 0 20px rgba(0, 255, 106, 0.3);
+      }
+
+      .override-title {
+        font-size: 20px;
+        color: var(--green);
+        text-shadow: 0 0 12px rgba(0, 255, 106, 0.6);
+      }
+
+      .sonic-footer {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 60px;
+        background: rgba(5, 5, 5, 0.92);
+        border-top: 1px solid rgba(0, 243, 255, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        z-index: 15;
+        gap: 12px;
+      }
+
+      .sonic-footer canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 60px;
+        pointer-events: none;
+      }
+
+      .footer-label {
+        position: relative;
+        z-index: 1;
+        color: var(--cyan);
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.6);
+        font-size: 18px;
+      }
+
+      .footer-controls {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .footer-btn {
+        font-size: 16px;
+        padding: 6px 10px;
+      }
+
+      .audio-status {
+        font-size: 16px;
+        color: var(--muted);
+      }
+
       @keyframes glitch {
         0% {
           text-shadow: 2px 0 rgba(0, 243, 255, 0.8),
@@ -369,6 +602,40 @@
         100% {
           text-shadow: 1px 0 rgba(0, 243, 255, 0.8),
             -1px 0 rgba(189, 0, 255, 0.6);
+        }
+      }
+
+      @keyframes glitch-in {
+        0% {
+          opacity: 0;
+          transform: translate(-12px, -8px) skewX(6deg);
+          clip-path: polygon(0 2%, 100% 0, 100% 14%, 0 18%);
+        }
+        40% {
+          opacity: 0.6;
+          transform: translate(10px, 4px) skewX(-4deg);
+          clip-path: polygon(0 32%, 100% 28%, 100% 42%, 0 46%);
+        }
+        70% {
+          opacity: 0.9;
+          transform: translate(-6px, 2px) skewX(2deg);
+          clip-path: polygon(0 60%, 100% 58%, 100% 76%, 0 72%);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(0, 0) skewX(0);
+          clip-path: inset(0 0 0 0);
+        }
+      }
+
+      @keyframes rgb-shift {
+        0% {
+          opacity: 0.9;
+          transform: translate(-6px, 2px);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(6px, -2px);
         }
       }
 
@@ -398,11 +665,28 @@
         header h1 {
           font-size: 32px;
         }
+
+        .memory-input {
+          flex-direction: column;
+        }
+
+        .sonic-footer {
+          flex-direction: column;
+          justify-content: center;
+          gap: 6px;
+          padding: 6px 12px;
+          height: 80px;
+        }
+
+        .sonic-footer canvas {
+          height: 80px;
+        }
       }
     </style>
   </head>
   <body>
     <div class="scanlines"></div>
+
     <div class="app">
       <header>
         <h1>The Nexus Terminal</h1>
@@ -421,7 +705,7 @@
             />
             <button id="addMemory">写入</button>
           </div>
-          <div class="memory-hint">左键复制 · 右键删除 · 自动持久化</div>
+          <div class="memory-hint">左键复制 · 右键删除 · QR 同步</div>
           <div id="memoryGrid" class="data-grid"></div>
         </section>
 
@@ -491,6 +775,43 @@
 
     <div id="toast" class="toast">COPIED</div>
 
+    <div id="qrModal" class="modal" aria-hidden="true">
+      <div id="qrPanel" class="modal-panel" role="dialog" aria-modal="true">
+        <button id="qrClose" class="btn secondary modal-close" type="button">
+          ✕
+        </button>
+        <h3>Glitch QR Bridge</h3>
+        <p>扫描以同步数据块。</p>
+        <img id="qrImage" class="qr-image" alt="QR Code" />
+        <div id="qrText" class="qr-text"></div>
+      </div>
+    </div>
+
+    <div id="overrideModal" class="override-modal" aria-hidden="true">
+      <div class="override-panel">
+        <div class="override-title">
+          SYSTEM OVERRIDE DETECTED. WELCOME, CREATOR from YUNNAN MINZU UNIVERSITY.
+          ACCESS GRANTED.
+        </div>
+        <div style="margin-top: 16px">
+          <button id="overrideClose" class="btn secondary" type="button">
+            关闭
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="sonic-footer">
+      <canvas id="sonicCanvas"></canvas>
+      <div class="footer-label">SONIC VISUALIZER</div>
+      <div class="footer-controls">
+        <button id="audioToggle" class="btn footer-btn" type="button">
+          INITIALIZE AUDIO
+        </button>
+        <div id="audioStatus" class="audio-status">AUDIO: OFFLINE</div>
+      </div>
+    </footer>
+
     <canvas id="stegCanvas" hidden></canvas>
 
     <script>
@@ -512,6 +833,20 @@
       const extractClear = document.getElementById("extractClear");
       const extractOutput = document.getElementById("extractOutput");
 
+      const qrModal = document.getElementById("qrModal");
+      const qrPanel = document.getElementById("qrPanel");
+      const qrClose = document.getElementById("qrClose");
+      const qrImage = document.getElementById("qrImage");
+      const qrText = document.getElementById("qrText");
+
+      const overrideModal = document.getElementById("overrideModal");
+      const overrideClose = document.getElementById("overrideClose");
+
+      const audioToggle = document.getElementById("audioToggle");
+      const audioStatus = document.getElementById("audioStatus");
+      const sonicCanvas = document.getElementById("sonicCanvas");
+      const sonicCtx = sonicCanvas.getContext("2d");
+
       const canvas = document.getElementById("stegCanvas");
       const ctx = canvas.getContext("2d");
 
@@ -519,7 +854,12 @@
       let injectImageLoaded = false;
       let typeTimer = null;
 
-      // --------- 记忆池逻辑 ---------
+      let audioCtx = null;
+      let analyser = null;
+      let dataArray = null;
+      let audioActive = false;
+      let fallbackPhase = 0;
+
       const isUrl = (text) => /^(https?:\/\/|www\.)/i.test(text.trim());
       const isCode = (text) =>
         /[{}`;]|<\/?[a-z][\s\S]*>|(function|const|let|var|=>|#include)/i.test(
@@ -558,7 +898,7 @@
           const tagParts = [];
           if (isUrl(item)) {
             block.classList.add("link");
-            tagParts.push("🔗 LINK");
+            tagParts.push("🔗");
           }
           if (isCode(item)) {
             block.classList.add("code");
@@ -567,21 +907,54 @@
 
           const head = document.createElement("div");
           head.className = "block-head";
-          head.innerHTML = `<span>#${String(index + 1).padStart(
-            3,
-            "0"
-          )}</span>`;
+
+          const meta = document.createElement("div");
+          meta.className = "block-meta";
+          const idSpan = document.createElement("span");
+          idSpan.textContent = `#${String(index + 1).padStart(3, "0")}`;
+          meta.appendChild(idSpan);
 
           if (tagParts.length) {
-            const tag = document.createElement("span");
-            tag.className = "tag" + (tagParts.includes("CODE") ? " code" : "");
-            tag.textContent = tagParts.join(" ");
-            head.appendChild(tag);
+            tagParts.forEach((tag) => {
+              const flag = document.createElement("span");
+              flag.className = "block-flag" + (tag === "CODE" ? " code" : "");
+              flag.textContent = tag;
+              meta.appendChild(flag);
+            });
           }
+
+          const actions = document.createElement("div");
+          actions.className = "block-actions";
+
+          const qrBtn = document.createElement("button");
+          qrBtn.type = "button";
+          qrBtn.className = "icon-btn qr-btn";
+          qrBtn.title = "生成 QR";
+          qrBtn.textContent = "▚";
+          qrBtn.addEventListener("click", (event) => {
+            event.stopPropagation();
+            openQrModal(item);
+          });
+
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "icon-btn delete-btn";
+          delBtn.title = "删除";
+          delBtn.textContent = "✕";
+          delBtn.addEventListener("click", (event) => {
+            event.stopPropagation();
+            deleteBlock(block);
+          });
+
+          actions.appendChild(qrBtn);
+          actions.appendChild(delBtn);
+
+          head.appendChild(meta);
+          head.appendChild(actions);
 
           const content = document.createElement("div");
           content.className = "block-content";
-          content.textContent = item.length > 140 ? item.slice(0, 140) + "…" : item;
+          content.textContent = item.length > 140 ? `${item.slice(0, 140)}…` : item;
           content.title = item;
 
           block.appendChild(head);
@@ -663,7 +1036,29 @@
         renderMemory();
       };
 
-      // --------- 密码信道 UI ---------
+      const openQrModal = (text) => {
+        const encoded = encodeURIComponent(text);
+        qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encoded}`;
+        qrText.textContent = text;
+        qrModal.classList.add("active");
+        qrModal.setAttribute("aria-hidden", "false");
+        qrPanel.classList.remove("glitch-in");
+        void qrPanel.offsetWidth;
+        qrPanel.classList.add("glitch-in");
+      };
+
+      const closeQrModal = () => {
+        qrModal.classList.remove("active");
+        qrModal.setAttribute("aria-hidden", "true");
+      };
+
+      qrClose.addEventListener("click", closeQrModal);
+      qrModal.addEventListener("click", (event) => {
+        if (event.target === qrModal) {
+          closeQrModal();
+        }
+      });
+
       document.querySelectorAll(".tab-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
           document
@@ -707,7 +1102,6 @@
         return Math.max(0, Math.floor((totalBits - 32) / 8));
       };
 
-      // --------- LSB 编码/解码 ---------
       const encodeLSB = (imageData, payload) => {
         const data = imageData.data;
         const capacityBits = (data.length / 4) * 3;
@@ -776,7 +1170,6 @@
         return new TextDecoder().decode(bytes);
       };
 
-      // --------- 注入模式 ---------
       const resetInject = () => {
         injectFile.value = "";
         injectPreview.src = "";
@@ -803,11 +1196,15 @@
         }
         downloadLink.href = "#";
         downloadLink.classList.add("disabled");
-        loadImageToCanvas(file, () => {
-          injectImageLoaded = true;
-          const capacity = getCapacityBytes();
-          injectCapacity.textContent = `可容纳约 ${capacity} 字节数据`;
-        }, injectPreview);
+        loadImageToCanvas(
+          file,
+          () => {
+            injectImageLoaded = true;
+            const capacity = getCapacityBytes();
+            injectCapacity.textContent = `可容纳约 ${capacity} 字节数据`;
+          },
+          injectPreview
+        );
       });
 
       injectBtn.addEventListener("click", () => {
@@ -835,9 +1232,14 @@
         }
       });
 
+      downloadLink.addEventListener("click", (event) => {
+        if (downloadLink.classList.contains("disabled")) {
+          event.preventDefault();
+        }
+      });
+
       injectClear.addEventListener("click", resetInject);
 
-      // --------- 提取模式 ---------
       const typewriter = (element, text) => {
         clearInterval(typeTimer);
         element.textContent = "";
@@ -874,7 +1276,220 @@
 
       extractClear.addEventListener("click", resetExtract);
 
+      const resizeSonic = () => {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = sonicCanvas.getBoundingClientRect();
+        sonicCanvas.width = rect.width * dpr;
+        sonicCanvas.height = rect.height * dpr;
+        sonicCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      };
+
+      const drawSonic = () => {
+        requestAnimationFrame(drawSonic);
+        const width = sonicCanvas.clientWidth;
+        const height = sonicCanvas.clientHeight;
+        if (!width || !height) {
+          return;
+        }
+
+        sonicCtx.clearRect(0, 0, width, height);
+        sonicCtx.fillStyle = "rgba(5, 5, 5, 0.85)";
+        sonicCtx.fillRect(0, 0, width, height);
+
+        sonicCtx.strokeStyle = "rgba(0, 243, 255, 0.12)";
+        sonicCtx.lineWidth = 1;
+        for (let i = 1; i <= 3; i += 1) {
+          const y = (height / 4) * i;
+          sonicCtx.beginPath();
+          sonicCtx.moveTo(0, y);
+          sonicCtx.lineTo(width, y);
+          sonicCtx.stroke();
+        }
+
+        const barCount = dataArray ? dataArray.length : 64;
+        const barWidth = width / barCount;
+
+        if (analyser && audioCtx && audioCtx.state === "running") {
+          analyser.getByteFrequencyData(dataArray);
+        } else {
+          if (!dataArray) {
+            dataArray = new Uint8Array(64);
+          }
+          for (let i = 0; i < dataArray.length; i += 1) {
+            dataArray[i] =
+              40 +
+              30 * Math.sin(fallbackPhase + i * 0.35) +
+              12 * Math.sin(fallbackPhase * 0.6 + i * 0.15);
+          }
+          fallbackPhase += 0.04;
+        }
+
+        sonicCtx.shadowColor = "rgba(0, 243, 255, 0.6)";
+        sonicCtx.shadowBlur = 10;
+        sonicCtx.fillStyle = "rgba(0, 243, 255, 0.8)";
+
+        for (let i = 0; i < barCount; i += 1) {
+          const value = dataArray[i] / 255;
+          const barHeight = Math.max(4, value * (height - 10));
+          const x = i * barWidth;
+          const y = height - barHeight;
+          sonicCtx.fillRect(x, y, Math.max(1, barWidth - 1), barHeight);
+        }
+
+        sonicCtx.shadowBlur = 0;
+      };
+
+      const initAudio = () => {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 256;
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        const masterGain = audioCtx.createGain();
+        masterGain.gain.value = 0.08;
+
+        const osc1 = audioCtx.createOscillator();
+        osc1.type = "sawtooth";
+        osc1.frequency.value = 70;
+
+        const osc2 = audioCtx.createOscillator();
+        osc2.type = "triangle";
+        osc2.frequency.value = 112;
+
+        const noiseBuffer = audioCtx.createBuffer(
+          1,
+          audioCtx.sampleRate * 2,
+          audioCtx.sampleRate
+        );
+        const noiseData = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < noiseData.length; i += 1) {
+          noiseData[i] = (Math.random() * 2 - 1) * 0.25;
+        }
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = noiseBuffer;
+        noise.loop = true;
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.value = 0.03;
+
+        const lfo = audioCtx.createOscillator();
+        lfo.frequency.value = 0.4;
+        const lfoGain = audioCtx.createGain();
+        lfoGain.gain.value = 0.02;
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(masterGain.gain);
+
+        osc1.connect(masterGain);
+        osc2.connect(masterGain);
+        noise.connect(noiseGain);
+        noiseGain.connect(masterGain);
+
+        masterGain.connect(analyser);
+        analyser.connect(audioCtx.destination);
+
+        osc1.start();
+        osc2.start();
+        noise.start();
+        lfo.start();
+      };
+
+      const updateAudioUi = () => {
+        audioToggle.textContent = audioActive ? "MUTE AUDIO" : "INITIALIZE AUDIO";
+        audioStatus.textContent = audioActive ? "AUDIO: ONLINE" : "AUDIO: OFFLINE";
+      };
+
+      const toggleAudio = async () => {
+        if (!audioCtx) {
+          initAudio();
+        }
+        if (audioCtx.state === "suspended") {
+          await audioCtx.resume();
+          audioActive = true;
+        } else {
+          await audioCtx.suspend();
+          audioActive = false;
+        }
+        updateAudioUi();
+      };
+
+      audioToggle.addEventListener("click", toggleAudio);
+
+      const playBeep = () => {
+        const ctxToUse = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctxToUse.createOscillator();
+        const gain = ctxToUse.createGain();
+        osc.type = "square";
+        osc.frequency.value = 880;
+        gain.gain.value = 0.2;
+        osc.connect(gain);
+        gain.connect(ctxToUse.destination);
+        ctxToUse.resume();
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctxToUse.currentTime + 0.2);
+        osc.stop(ctxToUse.currentTime + 0.25);
+        if (!audioCtx) {
+          osc.onended = () => ctxToUse.close();
+        }
+      };
+
+      const konamiSequence = [
+        "ArrowUp",
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowLeft",
+        "ArrowRight",
+        "b",
+        "a",
+      ];
+      let konamiIndex = 0;
+
+      const normalizeKey = (key) =>
+        key.startsWith("Arrow") ? key : key.toLowerCase();
+
+      const triggerKonami = () => {
+        playBeep();
+        document.body.classList.add("override");
+        overrideModal.classList.add("active");
+        overrideModal.setAttribute("aria-hidden", "false");
+      };
+
+      document.addEventListener("keydown", (event) => {
+        const key = normalizeKey(event.key);
+        const expected = konamiSequence[konamiIndex];
+        if (key === expected) {
+          konamiIndex += 1;
+          if (konamiIndex === konamiSequence.length) {
+            konamiIndex = 0;
+            triggerKonami();
+          }
+        } else {
+          konamiIndex = key === konamiSequence[0] ? 1 : 0;
+        }
+      });
+
+      const closeOverride = () => {
+        overrideModal.classList.remove("active");
+        overrideModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("override");
+      };
+
+      overrideClose.addEventListener("click", closeOverride);
+      overrideModal.addEventListener("click", (event) => {
+        if (event.target === overrideModal) {
+          closeOverride();
+        }
+      });
+
+      window.addEventListener("resize", resizeSonic);
+
       loadMemory();
+      resetInject();
+      resetExtract();
+      resizeSonic();
+      drawSonic();
     </script>
   </body>
 </html>
