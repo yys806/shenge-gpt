@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Nexus Terminal</title>
+    <link rel="icon" href="logo.jpg" type="image/jpeg" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #050505;
+        --panel: #1a1a1a;
+        --cyan: #00f3ff;
+        --purple: #bd00ff;
+        --green: #00ff6a;
+        --danger: #ff3b6a;
+        --text: #d7f8ff;
+        --muted: #7be7ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "VT323", "Courier New", monospace;
+        background: radial-gradient(
+            circle at 10% 10%,
+            rgba(0, 243, 255, 0.15),
+            transparent 45%
+          ),
+          radial-gradient(
+            circle at 90% 15%,
+            rgba(189, 0, 255, 0.12),
+            transparent 40%
+          ),
+          linear-gradient(140deg, #050505 10%, #0b0b0b 45%, #050505 100%);
+        color: var(--text);
+        letter-spacing: 0.5px;
+      }
+
+      .scanlines {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.05),
+          rgba(255, 255, 255, 0.02) 2px,
+          rgba(0, 0, 0, 0.12) 4px
+        );
+        mix-blend-mode: overlay;
+        opacity: 0.3;
+        z-index: 10;
+      }
+
+      .app {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 32px 24px 48px;
+      }
+
+      header {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 24px;
+        text-transform: uppercase;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 40px;
+        color: var(--cyan);
+        text-shadow: 0 0 18px rgba(0, 243, 255, 0.6);
+      }
+
+      header p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 20px;
+      }
+
+      .panel {
+        background: linear-gradient(160deg, #141414, #0f0f0f 60%, #131313);
+        border: 1px solid rgba(0, 243, 255, 0.4);
+        box-shadow: 0 0 24px rgba(0, 243, 255, 0.08);
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(189, 0, 255, 0.25);
+        pointer-events: none;
+      }
+
+      .panel h2 {
+        margin: 0 0 12px;
+        font-size: 26px;
+        color: var(--cyan);
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.6);
+      }
+
+      .panel small {
+        color: var(--muted);
+      }
+
+      .memory-input {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        background: #0a0a0a;
+        border: 1px solid rgba(0, 243, 255, 0.5);
+        color: var(--text);
+        padding: 10px 12px;
+        font-family: inherit;
+        font-size: 18px;
+        outline: none;
+        box-shadow: inset 0 0 8px rgba(0, 243, 255, 0.2);
+      }
+
+      textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      button,
+      .btn {
+        background: #0c0c0c;
+        border: 1px solid rgba(189, 0, 255, 0.7);
+        color: var(--text);
+        padding: 10px 14px;
+        font-family: inherit;
+        font-size: 18px;
+        cursor: pointer;
+        text-transform: uppercase;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease,
+          border-color 0.2s ease;
+        box-shadow: 0 0 10px rgba(189, 0, 255, 0.35);
+      }
+
+      button:hover,
+      .btn:hover {
+        border-color: var(--cyan);
+        box-shadow: 0 0 18px rgba(0, 243, 255, 0.45);
+        transform: translateY(-1px);
+        animation: glitch 0.6s infinite;
+      }
+
+      .memory-hint {
+        margin-bottom: 10px;
+        color: var(--muted);
+      }
+
+      .data-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 12px;
+      }
+
+      .data-block {
+        border: 1px solid rgba(0, 243, 255, 0.45);
+        background: rgba(8, 8, 8, 0.9);
+        padding: 10px;
+        min-height: 100px;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 0 12px rgba(0, 243, 255, 0.2);
+      }
+
+      .data-block.code {
+        border-color: rgba(189, 0, 255, 0.8);
+        box-shadow: 0 0 12px rgba(189, 0, 255, 0.3);
+      }
+
+      .data-block.link {
+        border-color: rgba(0, 243, 255, 0.9);
+      }
+
+      .data-block:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 16px rgba(0, 243, 255, 0.45);
+      }
+
+      .block-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 16px;
+        margin-bottom: 6px;
+        color: var(--muted);
+      }
+
+      .tag {
+        font-size: 14px;
+        color: var(--cyan);
+        text-shadow: 0 0 6px rgba(0, 243, 255, 0.8);
+      }
+
+      .tag.code {
+        color: var(--purple);
+      }
+
+      .block-content {
+        font-size: 18px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .shatter {
+        animation: shatter 0.35s forwards;
+      }
+
+      .cipher-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .tab-btn.active {
+        border-color: var(--cyan);
+        box-shadow: 0 0 16px rgba(0, 243, 255, 0.4);
+      }
+
+      .mode-panel {
+        display: none;
+      }
+
+      .mode-panel.active {
+        display: block;
+      }
+
+      .field {
+        margin-bottom: 14px;
+      }
+
+      .field label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--muted);
+      }
+
+      .file-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .file-input {
+        display: none;
+      }
+
+      .preview {
+        width: 100%;
+        max-height: 200px;
+        object-fit: contain;
+        border: 1px solid rgba(0, 243, 255, 0.35);
+        background: #050505;
+        margin-top: 10px;
+        box-shadow: 0 0 14px rgba(0, 243, 255, 0.2);
+      }
+
+      .output {
+        background: #0a0a0a;
+        border: 1px solid rgba(189, 0, 255, 0.6);
+        padding: 12px;
+        min-height: 120px;
+        white-space: pre-wrap;
+        font-size: 18px;
+        position: relative;
+      }
+
+      .output.typing::after {
+        content: "▮";
+        margin-left: 6px;
+        animation: blink 0.9s infinite;
+        color: var(--green);
+      }
+
+      .download-link {
+        display: inline-flex;
+        margin-top: 10px;
+        color: var(--green);
+        text-decoration: none;
+        font-size: 18px;
+        text-shadow: 0 0 8px rgba(0, 255, 106, 0.7);
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%) translateY(20px);
+        background: rgba(0, 0, 0, 0.85);
+        border: 1px solid rgba(0, 255, 106, 0.8);
+        color: var(--green);
+        padding: 10px 16px;
+        font-size: 18px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        box-shadow: 0 0 16px rgba(0, 255, 106, 0.5);
+        z-index: 20;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      @keyframes glitch {
+        0% {
+          text-shadow: 2px 0 rgba(0, 243, 255, 0.8),
+            -2px 0 rgba(189, 0, 255, 0.6);
+        }
+        50% {
+          text-shadow: -2px -1px rgba(0, 243, 255, 0.8),
+            2px 1px rgba(189, 0, 255, 0.6);
+        }
+        100% {
+          text-shadow: 1px 0 rgba(0, 243, 255, 0.8),
+            -1px 0 rgba(189, 0, 255, 0.6);
+        }
+      }
+
+      @keyframes shatter {
+        to {
+          opacity: 0;
+          transform: translateY(12px) scale(0.96) rotate(1deg);
+          filter: blur(2px);
+        }
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        header h1 {
+          font-size: 32px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scanlines"></div>
+    <div class="app">
+      <header>
+        <h1>The Nexus Terminal</h1>
+        <p>神经核心终端 · 挥发记忆池与密码信道并行运行</p>
+      </header>
+
+      <div class="grid">
+        <section class="panel">
+          <h2>Volatile Memory Pool / 挥发记忆池</h2>
+          <div class="memory-input">
+            <input
+              id="memoryInput"
+              type="text"
+              placeholder="输入内容后按 Enter 保存..."
+              autocomplete="off"
+            />
+            <button id="addMemory">写入</button>
+          </div>
+          <div class="memory-hint">左键复制 · 右键删除 · 自动持久化</div>
+          <div id="memoryGrid" class="data-grid"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Cipher Channel / 密码信道</h2>
+          <div class="cipher-tabs">
+            <button class="tab-btn active" data-mode="inject">INJECT</button>
+            <button class="tab-btn" data-mode="extract">EXTRACT</button>
+          </div>
+
+          <div id="injectPanel" class="mode-panel active">
+            <div class="field">
+              <label>1. 上传载体图片</label>
+              <label class="btn file-label">
+                选择图片
+                <input id="injectFile" class="file-input" type="file" accept="image/*" />
+              </label>
+              <div id="injectCapacity" class="memory-hint"></div>
+              <img id="injectPreview" class="preview" alt="预览" />
+            </div>
+            <div class="field">
+              <label>2. 输入需要隐藏的文本</label>
+              <textarea id="secretInput" placeholder="在这里输入秘密讯息..."></textarea>
+            </div>
+            <button id="injectBtn">注入并生成</button>
+            <a id="downloadLink" class="download-link" href="#" download>
+              下载隐写图像
+            </a>
+          </div>
+
+          <div id="extractPanel" class="mode-panel">
+            <div class="field">
+              <label>1. 上传已注入的图片</label>
+              <label class="btn file-label">
+                选择图片
+                <input id="extractFile" class="file-input" type="file" accept="image/*" />
+              </label>
+            </div>
+            <div class="field">
+              <label>2. 解析出的隐藏内容</label>
+              <div id="extractOutput" class="output">等待图像输入...</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="toast" class="toast">COPIED</div>
+
+    <canvas id="stegCanvas" hidden></canvas>
+
+    <script>
+      const STORAGE_KEY = "nexus_memory_v1";
+      const memoryInput = document.getElementById("memoryInput");
+      const addMemoryBtn = document.getElementById("addMemory");
+      const memoryGrid = document.getElementById("memoryGrid");
+      const toast = document.getElementById("toast");
+
+      const injectFile = document.getElementById("injectFile");
+      const injectBtn = document.getElementById("injectBtn");
+      const injectPreview = document.getElementById("injectPreview");
+      const injectCapacity = document.getElementById("injectCapacity");
+      const secretInput = document.getElementById("secretInput");
+      const downloadLink = document.getElementById("downloadLink");
+
+      const extractFile = document.getElementById("extractFile");
+      const extractOutput = document.getElementById("extractOutput");
+
+      const canvas = document.getElementById("stegCanvas");
+      const ctx = canvas.getContext("2d");
+
+      let memoryList = [];
+      let injectImageLoaded = false;
+      let typeTimer = null;
+
+      // --------- 记忆池逻辑 ---------
+      const isUrl = (text) => /^(https?:\/\/|www\.)/i.test(text.trim());
+      const isCode = (text) =>
+        /[{}`;]|<\/?[a-z][\s\S]*>|(function|const|let|var|=>|#include)/i.test(
+          text
+        );
+
+      const showToast = (message, tone = "success") => {
+        toast.textContent = message;
+        toast.style.borderColor =
+          tone === "danger" ? "rgba(255, 59, 106, 0.8)" : "rgba(0, 255, 106, 0.8)";
+        toast.style.color = tone === "danger" ? "#ff3b6a" : "var(--green)";
+        toast.classList.add("show");
+        clearTimeout(showToast.timer);
+        showToast.timer = setTimeout(() => toast.classList.remove("show"), 1600);
+      };
+
+      const saveMemory = () => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(memoryList));
+      };
+
+      const renderMemory = () => {
+        memoryGrid.innerHTML = "";
+        if (!memoryList.length) {
+          const empty = document.createElement("div");
+          empty.className = "memory-hint";
+          empty.textContent = "尚无数据块，输入内容后敲 Enter 写入。";
+          memoryGrid.appendChild(empty);
+          return;
+        }
+
+        memoryList.forEach((item, index) => {
+          const block = document.createElement("div");
+          block.className = "data-block";
+          block.dataset.index = index;
+
+          const tagParts = [];
+          if (isUrl(item)) {
+            block.classList.add("link");
+            tagParts.push("🔗 LINK");
+          }
+          if (isCode(item)) {
+            block.classList.add("code");
+            tagParts.push("CODE");
+          }
+
+          const head = document.createElement("div");
+          head.className = "block-head";
+          head.innerHTML = `<span>#${String(index + 1).padStart(
+            3,
+            "0"
+          )}</span>`;
+
+          if (tagParts.length) {
+            const tag = document.createElement("span");
+            tag.className = "tag" + (tagParts.includes("CODE") ? " code" : "");
+            tag.textContent = tagParts.join(" ");
+            head.appendChild(tag);
+          }
+
+          const content = document.createElement("div");
+          content.className = "block-content";
+          content.textContent = item.length > 140 ? item.slice(0, 140) + "…" : item;
+          content.title = item;
+
+          block.appendChild(head);
+          block.appendChild(content);
+
+          block.addEventListener("click", () => copyToClipboard(item));
+          block.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+            deleteBlock(block);
+          });
+
+          memoryGrid.appendChild(block);
+        });
+      };
+
+      const copyToClipboard = async (text) => {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const temp = document.createElement("textarea");
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand("copy");
+            document.body.removeChild(temp);
+          }
+          showToast("COPIED: 已写入剪贴板");
+        } catch (error) {
+          showToast("复制失败，请重试", "danger");
+        }
+      };
+
+      const deleteBlock = (block) => {
+        const index = Number(block.dataset.index);
+        block.classList.add("shatter");
+        block.addEventListener(
+          "animationend",
+          () => {
+            memoryList.splice(index, 1);
+            saveMemory();
+            renderMemory();
+          },
+          { once: true }
+        );
+      };
+
+      const addMemory = () => {
+        const text = memoryInput.value.trim();
+        if (!text) {
+          return;
+        }
+        memoryList.unshift(text);
+        memoryInput.value = "";
+        saveMemory();
+        renderMemory();
+      };
+
+      addMemoryBtn.addEventListener("click", addMemory);
+      memoryInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          addMemory();
+        }
+      });
+
+      const loadMemory = () => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed)) {
+              memoryList = parsed;
+            }
+          } catch (error) {
+            memoryList = [];
+          }
+        }
+        renderMemory();
+      };
+
+      // --------- 密码信道 UI ---------
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((item) => item.classList.remove("active"));
+          btn.classList.add("active");
+
+          const mode = btn.dataset.mode;
+          document.getElementById("injectPanel").classList.toggle(
+            "active",
+            mode === "inject"
+          );
+          document.getElementById("extractPanel").classList.toggle(
+            "active",
+            mode === "extract"
+          );
+        });
+      });
+
+      const loadImageToCanvas = (file, callback) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            callback(img);
+          };
+          img.src = reader.result;
+          if (injectPreview) {
+            injectPreview.src = reader.result;
+          }
+        };
+        reader.readAsDataURL(file);
+      };
+
+      const getCapacityBytes = () => {
+        const totalBits = canvas.width * canvas.height * 3;
+        return Math.max(0, Math.floor((totalBits - 32) / 8));
+      };
+
+      // --------- LSB 编码/解码 ---------
+      const encodeLSB = (imageData, payload) => {
+        const data = imageData.data;
+        const capacityBits = (data.length / 4) * 3;
+        const totalBits = 32 + payload.length * 8;
+        if (totalBits > capacityBits) {
+          throw new Error("超出容量");
+        }
+
+        let bitIndex = 0;
+        const writeBit = (bit) => {
+          const channelIndex = bitIndex % 3;
+          const pixelIndex = Math.floor(bitIndex / 3);
+          const dataIndex = pixelIndex * 4 + channelIndex;
+          data[dataIndex] = (data[dataIndex] & 0xfe) | bit;
+          bitIndex += 1;
+        };
+
+        for (let i = 31; i >= 0; i -= 1) {
+          writeBit((payload.length >> i) & 1);
+        }
+
+        payload.forEach((byte) => {
+          for (let i = 7; i >= 0; i -= 1) {
+            writeBit((byte >> i) & 1);
+          }
+        });
+
+        return imageData;
+      };
+
+      const decodeLSB = (imageData) => {
+        const data = imageData.data;
+        const capacityBits = (data.length / 4) * 3;
+        if (capacityBits < 32) {
+          throw new Error("图像尺寸过小");
+        }
+
+        const readBit = (bitIndex) => {
+          const channelIndex = bitIndex % 3;
+          const pixelIndex = Math.floor(bitIndex / 3);
+          const dataIndex = pixelIndex * 4 + channelIndex;
+          return data[dataIndex] & 1;
+        };
+
+        let length = 0;
+        for (let i = 0; i < 32; i += 1) {
+          length = (length << 1) | readBit(i);
+        }
+
+        const totalBits = 32 + length * 8;
+        if (totalBits > capacityBits) {
+          throw new Error("未检测到有效内容");
+        }
+
+        const bytes = new Uint8Array(length);
+        let offset = 32;
+        for (let i = 0; i < length; i += 1) {
+          let value = 0;
+          for (let bit = 0; bit < 8; bit += 1) {
+            value = (value << 1) | readBit(offset + bit);
+          }
+          bytes[i] = value;
+          offset += 8;
+        }
+
+        return new TextDecoder().decode(bytes);
+      };
+
+      // --------- 注入模式 ---------
+      injectFile.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (!file) {
+          return;
+        }
+        loadImageToCanvas(file, () => {
+          injectImageLoaded = true;
+          const capacity = getCapacityBytes();
+          injectCapacity.textContent = `可容纳约 ${capacity} 字节数据`;
+        });
+      });
+
+      injectBtn.addEventListener("click", () => {
+        if (!injectImageLoaded) {
+          showToast("请先选择图片", "danger");
+          return;
+        }
+        const secret = secretInput.value;
+        if (!secret.trim()) {
+          showToast("请输入需要隐藏的文本", "danger");
+          return;
+        }
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const bytes = new TextEncoder().encode(secret);
+        try {
+          const encoded = encodeLSB(imageData, bytes);
+          ctx.putImageData(encoded, 0, 0);
+          const url = canvas.toDataURL("image/png");
+          downloadLink.href = url;
+          showToast("注入完成，可下载图像");
+        } catch (error) {
+          alert("文本过长，超出图像容量！");
+        }
+      });
+
+      // --------- 提取模式 ---------
+      const typewriter = (element, text) => {
+        clearInterval(typeTimer);
+        element.textContent = "";
+        element.classList.add("typing");
+        let index = 0;
+        typeTimer = setInterval(() => {
+          element.textContent = text.slice(0, index);
+          index += 1;
+          if (index > text.length) {
+            clearInterval(typeTimer);
+            element.classList.remove("typing");
+          }
+        }, 30);
+      };
+
+      extractFile.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (!file) {
+          return;
+        }
+        loadImageToCanvas(file, () => {
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          try {
+            const message = decodeLSB(imageData);
+            typewriter(
+              extractOutput,
+              message || "未检测到隐藏内容，可能为空或损坏。"
+            );
+          } catch (error) {
+            typewriter(extractOutput, "解析失败：无法读取隐藏内容。");
+          }
+        });
+      });
+
+      loadMemory();
+    </script>
+  </body>
+</html>
