@@ -1185,10 +1185,21 @@
         if (!voices.length) {
           return;
         }
-        const preferred = ["Google US English", "Microsoft Zira"];
+        const preferred = [
+          "Microsoft David",
+          "Google US English Male",
+          "Google UK English Male",
+          "Alex",
+          "Daniel",
+          "George",
+        ];
+        const maleTokens = ["male", "david", "alex", "mark", "george", "daniel"];
         selectedVoice =
           voices.find((voice) =>
             preferred.some((name) => voice.name.includes(name))
+          ) ||
+          voices.find((voice) =>
+            maleTokens.some((token) => voice.name.toLowerCase().includes(token))
           ) ||
           voices.find((voice) => /en(-|_)us/i.test(voice.lang)) ||
           voices.find((voice) => voice.lang && voice.lang.startsWith("en")) ||
@@ -1204,8 +1215,8 @@
         if (selectedVoice) {
           utterance.voice = selectedVoice;
         }
-        utterance.rate = 1;
-        utterance.pitch = 1;
+        utterance.rate = 0.95;
+        utterance.pitch = 0.8;
         utterance.volume = 1;
         utterance.onstart = () => {
           isSpeaking = true;
@@ -1941,7 +1952,8 @@
 
       const handleCommand = (transcript) => {
         const clean = transcript.trim().toLowerCase();
-        if (clean.includes("status") || clean.includes("report")) {
+        const hasWord = (word) => new RegExp(`\\b${word}\\b`, "i").test(clean);
+        if (hasWord("status") || hasWord("report")) {
           const time = new Date().toLocaleTimeString("en-US", {
             hour12: false,
             hour: "2-digit",
@@ -1960,17 +1972,17 @@
           speak("Memory cleared.");
           return;
         }
-        if (clean.includes("silence")) {
+        if (hasWord("silence")) {
           stopAllAudio();
           showToast("已静音");
           return;
         }
-        if (clean.includes("theme red")) {
+        if (hasWord("red")) {
           applyTheme("red");
           showToast("已切换红色主题");
           return;
         }
-        if (clean.includes("theme blue")) {
+        if (hasWord("blue")) {
           applyTheme("blue");
           showToast("已切换蓝色主题");
           return;
