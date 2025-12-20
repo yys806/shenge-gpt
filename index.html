@@ -1803,12 +1803,22 @@
             },
             body: JSON.stringify(payload),
           });
-          const data = await response.json();
+          const rawText = await response.text();
+          let data = null;
+          if (rawText) {
+            try {
+              data = JSON.parse(rawText);
+            } catch (parseError) {
+              throw new Error(
+                `INVALID RESPONSE (${response.status}): ${rawText.slice(0, 180)}`
+              );
+            }
+          }
           if (!response.ok) {
             const errorText =
               data && data.error && data.error.message
                 ? data.error.message
-                : "REQUEST FAILED";
+                : rawText || `${response.status} ${response.statusText}`;
             throw new Error(errorText);
           }
           const message =
@@ -1820,7 +1830,11 @@
               : data.choices[0].text);
           const answer = message ? message.trim() : "";
           if (!answer) {
-            throw new Error("EMPTY RESPONSE");
+            throw new Error(
+              rawText
+                ? `UNSUPPORTED RESPONSE FORMAT`
+                : "EMPTY RESPONSE BODY"
+            );
           }
           aiHistory.push({ role: "assistant", content: answer });
           if (aiHistory.length > 8) {
