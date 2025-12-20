@@ -50,6 +50,10 @@
         transform: rotate(180deg);
       }
 
+      body.sentry {
+        background: #000;
+      }
+
       .scanlines {
         position: fixed;
         inset: 0;
@@ -65,10 +69,67 @@
         z-index: 5;
       }
 
+      .sentry-video {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        filter: grayscale(1) contrast(1.1) brightness(0.55) sepia(0.4)
+          hue-rotate(165deg) saturate(1.5);
+      }
+
+      body.sentry .sentry-video {
+        opacity: 1;
+      }
+
+      .reticle {
+        position: fixed;
+        width: 140px;
+        height: 140px;
+        border: 1px solid rgba(0, 243, 255, 0.7);
+        box-shadow: 0 0 12px rgba(0, 243, 255, 0.35);
+        pointer-events: none;
+        opacity: 0;
+        z-index: 12;
+        transition: opacity 0.2s ease;
+        transform: translate(-50%, -50%);
+      }
+
+      .reticle::before,
+      .reticle::after {
+        content: "";
+        position: absolute;
+        background: rgba(0, 243, 255, 0.6);
+      }
+
+      .reticle::before {
+        left: 10%;
+        right: 10%;
+        top: 50%;
+        height: 1px;
+      }
+
+      .reticle::after {
+        top: 10%;
+        bottom: 10%;
+        left: 50%;
+        width: 1px;
+      }
+
+      .reticle.active {
+        opacity: 1;
+      }
+
       .app {
         max-width: 1280px;
         margin: 0 auto;
         padding: 32px 24px 110px;
+        position: relative;
+        z-index: 2;
       }
 
       header {
@@ -157,6 +218,61 @@
         border-color: var(--danger);
         color: var(--danger);
         box-shadow: 0 0 16px rgba(255, 59, 106, 0.6);
+      }
+
+      .hud-panels {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+
+      .hud-panel {
+        min-width: 180px;
+        padding: 10px 12px;
+        background: rgba(5, 5, 5, 0.65);
+        border: 1px solid rgba(0, 243, 255, 0.35);
+        box-shadow: 0 0 12px rgba(0, 243, 255, 0.12);
+        font-size: 14px;
+      }
+
+      .hud-title {
+        font-size: 16px;
+        color: var(--cyan);
+        margin-bottom: 6px;
+        text-shadow: 0 0 8px rgba(0, 243, 255, 0.5);
+      }
+
+      .hud-line {
+        margin-bottom: 4px;
+        color: var(--text);
+      }
+
+      .hud-line:last-child {
+        margin-bottom: 0;
+      }
+
+      .sentry-control {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 8px;
+      }
+
+      .sentry-toggle {
+        padding: 6px 12px;
+        font-size: 16px;
+      }
+
+      .sensor-status {
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .sensor-status.offline {
+        color: var(--danger);
       }
 
       .grid {
@@ -870,6 +986,15 @@
           font-size: 14px;
         }
 
+        .hud-panel {
+          min-width: 150px;
+        }
+
+        .sentry-control {
+          flex-direction: column;
+          gap: 6px;
+        }
+
         .sonic-footer {
           flex-direction: column;
           justify-content: center;
@@ -893,6 +1018,14 @@
   </head>
   <body>
     <div class="scanlines"></div>
+    <video
+      id="sentryVideo"
+      class="sentry-video"
+      autoplay
+      muted
+      playsinline
+    ></video>
+    <div id="reticle" class="reticle"></div>
     <div id="netGhost" class="net-ghost">
       <div class="ghost-header">
         <span class="ghost-dot"></span>
@@ -910,6 +1043,26 @@
         <div class="command-center">
           <div id="arcReactor" class="arc-reactor"></div>
           <button id="micBtn" class="mic-btn" type="button">MIC</button>
+        </div>
+        <div class="hud-panels">
+          <div class="hud-panel">
+            <div class="hud-title">SYSTEMS</div>
+            <div id="batteryLine" class="hud-line">BATTERY: --</div>
+            <div id="chargeLine" class="hud-line">STATUS: --</div>
+            <div id="cpuLine" class="hud-line">CPU CORES: --</div>
+          </div>
+          <div class="hud-panel">
+            <div class="hud-title">ENV SENSORS</div>
+            <div id="tempLine" class="hud-line">TEMP: --</div>
+            <div id="windLine" class="hud-line">WIND: --</div>
+            <div id="coordLine" class="hud-line">COORD: --</div>
+          </div>
+        </div>
+        <div class="sentry-control">
+          <button id="sentryToggle" class="btn secondary sentry-toggle" type="button">
+            SENTRY
+          </button>
+          <span id="sentryStatus" class="sensor-status">SENTRY: OFF</span>
         </div>
       </header>
 
@@ -1112,8 +1265,19 @@
       const locLine = document.getElementById("locLine");
       const latencyLine = document.getElementById("latencyLine");
 
+      const batteryLine = document.getElementById("batteryLine");
+      const chargeLine = document.getElementById("chargeLine");
+      const cpuLine = document.getElementById("cpuLine");
+      const tempLine = document.getElementById("tempLine");
+      const windLine = document.getElementById("windLine");
+      const coordLine = document.getElementById("coordLine");
+
       const arcReactor = document.getElementById("arcReactor");
       const micBtn = document.getElementById("micBtn");
+      const sentryVideo = document.getElementById("sentryVideo");
+      const reticle = document.getElementById("reticle");
+      const sentryToggle = document.getElementById("sentryToggle");
+      const sentryStatus = document.getElementById("sentryStatus");
 
       const qrModal = document.getElementById("qrModal");
       const qrPanel = document.getElementById("qrPanel");
@@ -1146,6 +1310,15 @@
       let isListening = false;
       let isSpeaking = false;
       let currentIp = "UNKNOWN";
+      let batteryAlerted = false;
+      let sentryActive = false;
+      let sentryStream = null;
+      let targetX = window.innerWidth / 2;
+      let targetY = window.innerHeight / 2;
+      let reticleX = targetX;
+      let reticleY = targetY;
+      let startupSpoken = false;
+      let weatherTemp = null;
 
       const isUrl = (text) => /^(https?:\/\/|www\.)/i.test(text.trim());
       const isCode = (text) =>
@@ -1239,6 +1412,198 @@
         }
         isSpeaking = false;
         updateArcState();
+      };
+
+      const setEnvOffline = (keepCoord = false) => {
+        tempLine.textContent = "TEMP: SENSOR OFFLINE";
+        windLine.textContent = "WIND: SENSOR OFFLINE";
+        if (!keepCoord) {
+          coordLine.textContent = "COORD: SENSOR OFFLINE";
+        }
+      };
+
+      const updateBatteryUi = (battery) => {
+        const level = Math.round(battery.level * 100);
+        batteryLine.textContent = `BATTERY: ${level}%`;
+        chargeLine.textContent = `STATUS: ${battery.charging ? "CHARGING" : "ON BATTERY"}`;
+        if (level < 20 && !batteryAlerted) {
+          speak("Power critical.");
+          batteryAlerted = true;
+        }
+        if (level >= 25) {
+          batteryAlerted = false;
+        }
+      };
+
+      const initBattery = () => {
+        if (!navigator.getBattery) {
+          batteryLine.textContent = "BATTERY: UNAVAILABLE";
+          chargeLine.textContent = "STATUS: OFFLINE";
+          return;
+        }
+        navigator
+          .getBattery()
+          .then((battery) => {
+            updateBatteryUi(battery);
+            battery.addEventListener("levelchange", () =>
+              updateBatteryUi(battery)
+            );
+            battery.addEventListener("chargingchange", () =>
+              updateBatteryUi(battery)
+            );
+          })
+          .catch(() => {
+            batteryLine.textContent = "BATTERY: OFFLINE";
+            chargeLine.textContent = "STATUS: OFFLINE";
+          });
+      };
+
+      const initHardware = () => {
+        const cores = navigator.hardwareConcurrency;
+        cpuLine.textContent = `CPU CORES: ${typeof cores === "number" ? cores : "UNAVAILABLE"}`;
+        initBattery();
+      };
+
+      const speakStartup = (tempValue) => {
+        if (startupSpoken) {
+          return;
+        }
+        startupSpoken = true;
+        const rounded =
+          typeof tempValue === "number" && !Number.isNaN(tempValue)
+            ? Math.round(tempValue)
+            : null;
+        const message =
+          rounded !== null
+            ? `System Online. Temperature is ${rounded} degrees. Welcome back, Sir.`
+            : "System Online. Weather sensors offline. Welcome back, Sir.";
+        speak(message);
+      };
+
+      const initWeather = () => {
+        if (!navigator.geolocation) {
+          setEnvOffline();
+          locLine.textContent = "LOC: SENSOR OFFLINE";
+          speakStartup(null);
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            const latText = latitude.toFixed(2);
+            const lonText = longitude.toFixed(2);
+            coordLine.textContent = `COORD: ${latText}, ${lonText}`;
+            locLine.textContent = `LOC: ${latText}, ${lonText}`;
+            try {
+              const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
+              const response = await fetch(url);
+              if (!response.ok) {
+                throw new Error("weather");
+              }
+              const data = await response.json();
+              const current = data.current_weather || {};
+              if (typeof current.temperature === "number") {
+                weatherTemp = current.temperature;
+                tempLine.textContent = `TEMP: ${Math.round(current.temperature)}°C`;
+              } else {
+                tempLine.textContent = "TEMP: SENSOR OFFLINE";
+              }
+              if (typeof current.windspeed === "number") {
+                windLine.textContent = `WIND: ${Math.round(current.windspeed)} km/h`;
+              } else {
+                windLine.textContent = "WIND: SENSOR OFFLINE";
+              }
+              speakStartup(weatherTemp);
+            } catch (error) {
+              setEnvOffline(true);
+              speakStartup(null);
+            }
+          },
+          () => {
+            setEnvOffline();
+            locLine.textContent = "LOC: SENSOR OFFLINE";
+            speakStartup(null);
+          },
+          { timeout: 8000 }
+        );
+      };
+
+      const setSentryStatus = (text, offline = false) => {
+        if (!sentryStatus) {
+          return;
+        }
+        sentryStatus.textContent = text;
+        sentryStatus.classList.toggle("offline", offline);
+      };
+
+      const startSentry = async () => {
+        if (sentryActive) {
+          return;
+        }
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          setSentryStatus("SENTRY: OFFLINE", true);
+          return;
+        }
+        try {
+          sentryStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+          });
+          sentryVideo.srcObject = sentryStream;
+          await sentryVideo.play();
+          sentryActive = true;
+          document.body.classList.add("sentry");
+          reticle.classList.add("active");
+          setSentryStatus("SENTRY: ONLINE");
+        } catch (error) {
+          sentryActive = false;
+          if (sentryStream) {
+            sentryStream.getTracks().forEach((track) => track.stop());
+            sentryStream = null;
+          }
+          setSentryStatus("SENTRY: OFFLINE", true);
+          document.body.classList.remove("sentry");
+          reticle.classList.remove("active");
+        }
+      };
+
+      const stopSentry = () => {
+        if (sentryStream) {
+          sentryStream.getTracks().forEach((track) => track.stop());
+        }
+        sentryStream = null;
+        sentryVideo.srcObject = null;
+        sentryActive = false;
+        document.body.classList.remove("sentry");
+        reticle.classList.remove("active");
+        setSentryStatus("SENTRY: OFF");
+      };
+
+      const toggleSentry = () => {
+        if (sentryActive) {
+          stopSentry();
+        } else {
+          startSentry();
+        }
+      };
+
+      const initSentry = () => {
+        if (!sentryToggle) {
+          return;
+        }
+        setSentryStatus("SENTRY: OFF");
+        sentryToggle.addEventListener("click", toggleSentry);
+      };
+
+      const animateReticle = () => {
+        if (reticle) {
+          const ease = sentryActive ? 0.12 : 0.06;
+          reticleX += (targetX - reticleX) * ease;
+          reticleY += (targetY - reticleY) * ease;
+          reticle.style.left = `${reticleX}px`;
+          reticle.style.top = `${reticleY}px`;
+        }
+        requestAnimationFrame(animateReticle);
       };
 
       const saveMemory = () => {
@@ -1662,7 +2027,7 @@
           showToast("注入完成，可下载图像");
           speak("Encryption complete.");
         } catch (error) {
-          alert("文本过长，超出图像容量！");
+          showToast("文本过长，超出图像容量！", "danger");
         }
       });
 
@@ -2062,8 +2427,31 @@
       loadIpAddress();
       initSpeech();
       initRecognition();
+      initHardware();
+      initWeather();
+      initSentry();
 
-      window.addEventListener("resize", resizeSonic);
+      window.addEventListener("resize", () => {
+        resizeSonic();
+        targetX = window.innerWidth / 2;
+        targetY = window.innerHeight / 2;
+      });
+      window.addEventListener("mousemove", (event) => {
+        targetX = event.clientX;
+        targetY = event.clientY;
+      });
+      window.addEventListener(
+        "touchmove",
+        (event) => {
+          const touch = event.touches[0];
+          if (!touch) {
+            return;
+          }
+          targetX = touch.clientX;
+          targetY = touch.clientY;
+        },
+        { passive: true }
+      );
 
       loadMemory();
       resetInject();
@@ -2071,7 +2459,7 @@
       updateTransmute();
       resizeSonic();
       drawSonic();
-      setTimeout(() => speak("System Online. Welcome back, Sir."), 500);
+      animateReticle();
     </script>
   </body>
 </html>
