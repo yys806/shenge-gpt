@@ -138,6 +138,7 @@
         gap: 6px;
         margin-bottom: 24px;
         text-transform: uppercase;
+        position: relative;
       }
 
       header h1 {
@@ -151,6 +152,26 @@
         margin: 0;
         color: var(--muted);
         font-size: 18px;
+      }
+
+      .settings-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 243, 255, 0.6);
+        background: rgba(5, 5, 5, 0.75);
+        color: var(--cyan);
+        font-size: 18px;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+      }
+
+      .settings-btn:hover {
+        border-color: var(--purple);
+        color: var(--purple);
       }
 
       .command-center {
@@ -197,6 +218,13 @@
 
       .arc-reactor.speaking {
         animation: arc-speak 0.45s ease-in-out infinite;
+      }
+
+      .arc-reactor.thinking {
+        animation: arc-think 0.7s ease-in-out infinite;
+        border-color: rgba(255, 199, 64, 0.8);
+        box-shadow: 0 0 22px rgba(255, 199, 64, 0.6),
+          inset 0 0 18px rgba(255, 199, 64, 0.4);
       }
 
       .mic-btn {
@@ -281,6 +309,12 @@
         gap: 20px;
       }
 
+      .right-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
       .panel {
         background: linear-gradient(160deg, #141414, #0f0f0f 60%, #131313);
         border: 1px solid rgba(0, 243, 255, 0.4);
@@ -305,6 +339,23 @@
         text-shadow: 0 0 10px rgba(0, 243, 255, 0.6);
       }
 
+      .panel-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .panel-title-row h2 {
+        margin: 0;
+      }
+
+      .panel-tag {
+        font-size: 14px;
+        color: var(--purple);
+        text-shadow: 0 0 6px rgba(189, 0, 255, 0.5);
+      }
+
       .memory-input {
         display: flex;
         gap: 10px;
@@ -312,6 +363,7 @@
       }
 
       input[type="text"],
+      input[type="password"],
       textarea {
         width: 100%;
         background: #0a0a0a;
@@ -572,6 +624,78 @@
         gap: 12px;
       }
 
+      .ai-log {
+        border: 1px solid rgba(0, 243, 255, 0.35);
+        background: rgba(5, 5, 5, 0.65);
+        min-height: 160px;
+        max-height: 260px;
+        overflow-y: auto;
+        padding: 10px;
+        display: grid;
+        gap: 8px;
+        box-shadow: inset 0 0 12px rgba(0, 243, 255, 0.12);
+      }
+
+      .ai-entry {
+        padding: 6px 8px;
+        border: 1px solid transparent;
+        background: rgba(10, 10, 10, 0.6);
+        font-size: 16px;
+        white-space: pre-wrap;
+      }
+
+      .ai-entry.user {
+        border-color: rgba(189, 0, 255, 0.6);
+        color: var(--text);
+      }
+
+      .ai-entry.assistant {
+        border-color: rgba(0, 243, 255, 0.6);
+        color: var(--cyan);
+      }
+
+      .ai-entry.system {
+        border-color: rgba(0, 255, 106, 0.5);
+        color: var(--green);
+      }
+
+      .ai-input {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .ai-input input {
+        flex: 1;
+      }
+
+      .ai-hint {
+        margin-top: 8px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .protocol-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .popup-warning {
+        margin-top: 10px;
+        padding: 8px 10px;
+        border: 1px solid rgba(255, 59, 106, 0.8);
+        color: var(--danger);
+        background: rgba(20, 5, 8, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 14px;
+        box-shadow: 0 0 12px rgba(255, 59, 106, 0.25);
+      }
+
+      .popup-warning.hidden {
+        display: none;
+      }
+
       .trans-output {
         background: #0a0a0a;
         border: 1px solid rgba(0, 243, 255, 0.45);
@@ -783,6 +907,27 @@
         text-shadow: 0 0 12px rgba(0, 255, 106, 0.6);
       }
 
+      .deploy-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--cyan);
+        font-size: 32px;
+        letter-spacing: 4px;
+        text-shadow: 0 0 16px rgba(0, 243, 255, 0.8);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 70;
+      }
+
+      .deploy-overlay.active {
+        opacity: 1;
+      }
+
       .sonic-footer {
         position: fixed;
         left: 0;
@@ -950,6 +1095,18 @@
         }
       }
 
+      @keyframes arc-think {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: scale(1.12);
+          opacity: 1;
+        }
+      }
+
       @keyframes pulse {
         0%,
         100% {
@@ -971,6 +1128,11 @@
           font-size: 32px;
         }
 
+        .settings-btn {
+          top: 4px;
+          right: 4px;
+        }
+
         .memory-input {
           flex-direction: column;
         }
@@ -988,6 +1150,14 @@
 
         .hud-panel {
           min-width: 150px;
+        }
+
+        .right-stack {
+          gap: 16px;
+        }
+
+        .ai-input {
+          flex-direction: column;
         }
 
         .sentry-control {
@@ -1038,6 +1208,14 @@
 
     <div class="app">
       <header>
+        <button
+          id="settingsBtn"
+          class="settings-btn"
+          type="button"
+          aria-label="设置"
+        >
+          ⚙
+        </button>
         <h1>The Nexus Terminal</h1>
         <p>神经核心终端 · 挥发记忆池与密码信道并行运行</p>
         <div class="command-center">
@@ -1082,7 +1260,8 @@
           <div id="memoryGrid" class="data-grid"></div>
         </section>
 
-        <section class="panel">
+        <div class="right-stack">
+          <section class="panel">
           <h2>Cipher Channel / 密码信道</h2>
           <div class="cipher-tabs panel-tabs">
             <button class="tab-btn panel-tab active" data-panel="cipher">
@@ -1190,6 +1369,45 @@
             </div>
           </div>
         </section>
+          <section class="panel neural-panel">
+            <div class="panel-title-row">
+              <h2>Neural Uplink / 神经上行</h2>
+              <span class="panel-tag">AI</span>
+            </div>
+            <div id="aiLog" class="ai-log"></div>
+            <div class="ai-input">
+              <input
+                id="aiInput"
+                type="text"
+                placeholder="输入指令或问题，Enter 发送..."
+                autocomplete="off"
+              />
+              <button id="aiSend" class="btn secondary" type="button">
+                发送
+              </button>
+            </div>
+            <div class="ai-hint">
+              关键词指令将直接执行，其余请求接入 AI。
+            </div>
+          </section>
+          <section class="panel protocols-panel">
+            <h2>Battle Protocols / 作战协议</h2>
+            <div class="protocol-grid">
+              <button class="btn protocol-btn" type="button" data-protocol="academic">
+                PROTOCOL: ACADEMIC
+              </button>
+              <button class="btn protocol-btn" type="button" data-protocol="command">
+                PROTOCOL: COMMAND
+              </button>
+              <button class="btn protocol-btn" type="button" data-protocol="total">
+                PROTOCOL: TOTAL WAR
+              </button>
+            </div>
+            <div id="popupWarning" class="popup-warning hidden">
+              PLEASE ALLOW POPUPS FOR THIS DOMAIN
+            </div>
+          </section>
+        </div>
       </div>
     </div>
 
@@ -1207,6 +1425,29 @@
       </div>
     </div>
 
+    <div id="settingsModal" class="modal" aria-hidden="true">
+      <div id="settingsPanel" class="modal-panel" role="dialog" aria-modal="true">
+        <button id="settingsClose" class="btn secondary modal-close" type="button">
+          X
+        </button>
+        <h3>Neural Uplink Settings</h3>
+        <p>配置 API 端点与密钥，内容仅保存于本地。</p>
+        <div class="field">
+          <label>API Endpoint</label>
+          <input id="apiEndpoint" type="text" placeholder="https://api.openai.com/v1/chat/completions" />
+        </div>
+        <div class="field">
+          <label>API Key</label>
+          <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>Model</label>
+          <input id="apiModel" type="text" placeholder="gpt-3.5-turbo" />
+        </div>
+        <button id="saveSettings" class="btn" type="button">保存配置</button>
+      </div>
+    </div>
+
     <div id="overrideModal" class="override-modal" aria-hidden="true">
       <div class="override-panel">
         <div class="override-title">
@@ -1220,6 +1461,8 @@
         </div>
       </div>
     </div>
+
+    <div id="deployOverlay" class="deploy-overlay">DEPLOYING...</div>
 
     <footer class="sonic-footer">
       <canvas id="sonicCanvas"></canvas>
@@ -1236,6 +1479,11 @@
 
     <script>
       const STORAGE_KEY = "nexus_memory_v1";
+      const AI_ENDPOINT_KEY = "nexus_ai_endpoint";
+      const AI_KEY_KEY = "nexus_ai_key";
+      const AI_MODEL_KEY = "nexus_ai_model";
+      const AI_SYSTEM_PROMPT =
+        "You are JARVIS, a helpful AI assistant for a student at Tongji University. Keep responses concise, cool, and tech-focused.";
       const memoryInput = document.getElementById("memoryInput");
       const addMemoryBtn = document.getElementById("addMemory");
       const memoryGrid = document.getElementById("memoryGrid");
@@ -1260,6 +1508,20 @@
       const hexOutput = document.getElementById("hexOutput");
       const binOutput = document.getElementById("binOutput");
       const base64Output = document.getElementById("base64Output");
+      const aiLog = document.getElementById("aiLog");
+      const aiInput = document.getElementById("aiInput");
+      const aiSend = document.getElementById("aiSend");
+      const settingsBtn = document.getElementById("settingsBtn");
+      const settingsModal = document.getElementById("settingsModal");
+      const settingsPanel = document.getElementById("settingsPanel");
+      const settingsClose = document.getElementById("settingsClose");
+      const apiEndpointInput = document.getElementById("apiEndpoint");
+      const apiKeyInput = document.getElementById("apiKey");
+      const apiModelInput = document.getElementById("apiModel");
+      const saveSettingsBtn = document.getElementById("saveSettings");
+      const protocolButtons = document.querySelectorAll(".protocol-btn");
+      const popupWarning = document.getElementById("popupWarning");
+      const deployOverlay = document.getElementById("deployOverlay");
 
       const ipLine = document.getElementById("ipLine");
       const locLine = document.getElementById("locLine");
@@ -1309,6 +1571,7 @@
       let selectedVoice = null;
       let isListening = false;
       let isSpeaking = false;
+      let isThinking = false;
       let currentIp = "UNKNOWN";
       let batteryAlerted = false;
       let sentryActive = false;
@@ -1319,6 +1582,12 @@
       let reticleY = targetY;
       let startupSpoken = false;
       let weatherTemp = null;
+      let aiHistory = [];
+      let aiSettings = {
+        endpoint: "https://api.openai.com/v1/chat/completions",
+        key: "",
+        model: "gpt-3.5-turbo",
+      };
 
       const isUrl = (text) => /^(https?:\/\/|www\.)/i.test(text.trim());
       const isCode = (text) =>
@@ -1340,13 +1609,17 @@
         if (!arcReactor) {
           return;
         }
-        arcReactor.classList.remove("listening", "speaking");
+        arcReactor.classList.remove("listening", "speaking", "thinking");
         if (isListening) {
           arcReactor.classList.add("listening");
           return;
         }
         if (isSpeaking) {
           arcReactor.classList.add("speaking");
+          return;
+        }
+        if (isThinking) {
+          arcReactor.classList.add("thinking");
         }
       };
 
@@ -1412,6 +1685,253 @@
         }
         isSpeaking = false;
         updateArcState();
+      };
+
+      const appendLog = (role, text) => {
+        if (!aiLog) {
+          return null;
+        }
+        const entry = document.createElement("div");
+        entry.className = `ai-entry ${role}`;
+        entry.textContent = text;
+        aiLog.appendChild(entry);
+        aiLog.scrollTop = aiLog.scrollHeight;
+        return entry;
+      };
+
+      const loadAiSettings = () => {
+        const endpoint = localStorage.getItem(AI_ENDPOINT_KEY);
+        const key = localStorage.getItem(AI_KEY_KEY);
+        const model = localStorage.getItem(AI_MODEL_KEY);
+        aiSettings.endpoint = endpoint || aiSettings.endpoint;
+        aiSettings.key = key || "";
+        aiSettings.model = model || aiSettings.model;
+        if (apiEndpointInput) {
+          apiEndpointInput.value = aiSettings.endpoint;
+        }
+        if (apiKeyInput) {
+          apiKeyInput.value = aiSettings.key;
+        }
+        if (apiModelInput) {
+          apiModelInput.value = aiSettings.model;
+        }
+      };
+
+      const closeSettings = () => {
+        if (!settingsModal) {
+          return;
+        }
+        settingsModal.classList.remove("active");
+        settingsModal.setAttribute("aria-hidden", "true");
+      };
+
+      const openSettings = () => {
+        if (!settingsModal) {
+          return;
+        }
+        settingsModal.classList.add("active");
+        settingsModal.setAttribute("aria-hidden", "false");
+        if (apiEndpointInput) {
+          apiEndpointInput.focus();
+        }
+      };
+
+      const saveAiSettings = () => {
+        if (apiEndpointInput) {
+          const value = apiEndpointInput.value.trim();
+          if (value) {
+            aiSettings.endpoint = value;
+          }
+        }
+        if (apiKeyInput) {
+          aiSettings.key = apiKeyInput.value.trim();
+        }
+        if (apiModelInput) {
+          const value = apiModelInput.value.trim();
+          if (value) {
+            aiSettings.model = value;
+          }
+        }
+        localStorage.setItem(AI_ENDPOINT_KEY, aiSettings.endpoint);
+        if (aiSettings.key) {
+          localStorage.setItem(AI_KEY_KEY, aiSettings.key);
+        } else {
+          localStorage.removeItem(AI_KEY_KEY);
+        }
+        localStorage.setItem(AI_MODEL_KEY, aiSettings.model);
+        showToast("配置已保存");
+        closeSettings();
+      };
+
+      const setThinking = (state) => {
+        isThinking = state;
+        updateArcState();
+      };
+
+      const sendToAi = async (prompt) => {
+        const cleaned = prompt.trim();
+        if (!cleaned) {
+          return;
+        }
+        if (!aiSettings.endpoint || !aiSettings.key) {
+          showToast("请先配置 API 端点与密钥", "danger");
+          appendLog("system", "NEURAL LINK: CONFIG REQUIRED.");
+          openSettings();
+          return;
+        }
+        appendLog("user", cleaned);
+        aiHistory.push({ role: "user", content: cleaned });
+        if (aiHistory.length > 8) {
+          aiHistory = aiHistory.slice(-8);
+        }
+        setThinking(true);
+        const thinkingEntry = appendLog("system", "NEURAL LINK: THINKING...");
+        try {
+          const payload = {
+            model: aiSettings.model,
+            messages: [
+              { role: "system", content: AI_SYSTEM_PROMPT },
+              ...aiHistory,
+            ],
+            temperature: 0.6,
+          };
+          const response = await fetch(aiSettings.endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${aiSettings.key}`,
+            },
+            body: JSON.stringify(payload),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            const errorText =
+              data && data.error && data.error.message
+                ? data.error.message
+                : "REQUEST FAILED";
+            throw new Error(errorText);
+          }
+          const message =
+            data &&
+            data.choices &&
+            data.choices[0] &&
+            (data.choices[0].message
+              ? data.choices[0].message.content
+              : data.choices[0].text);
+          const answer = message ? message.trim() : "";
+          if (!answer) {
+            throw new Error("EMPTY RESPONSE");
+          }
+          aiHistory.push({ role: "assistant", content: answer });
+          if (aiHistory.length > 8) {
+            aiHistory = aiHistory.slice(-8);
+          }
+          appendLog("assistant", answer);
+          if (thinkingEntry) {
+            thinkingEntry.textContent = "NEURAL LINK: READY.";
+          }
+          setThinking(false);
+          speak(answer);
+        } catch (error) {
+          if (thinkingEntry) {
+            thinkingEntry.textContent = "NEURAL LINK: ERROR.";
+          }
+          setThinking(false);
+          showToast("AI 请求失败", "danger");
+          appendLog("system", `AI ERROR: ${error.message || "UNKNOWN"}`);
+        }
+      };
+
+      const executeCommand = (transcript) => {
+        const clean = transcript.trim().toLowerCase();
+        if (!clean) {
+          return true;
+        }
+        const hasWord = (word) => new RegExp(`\\b${word}\\b`, "i").test(clean);
+        if (hasWord("status") || hasWord("report")) {
+          const time = new Date().toLocaleTimeString("en-US", {
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          const ip = currentIp || "UNKNOWN";
+          speak(`Status report. Time ${time}. IP ${ip}.`);
+          showToast("状态播报完成");
+          return true;
+        }
+        if (hasWord("time")) {
+          const time = new Date().toLocaleTimeString("en-US", {
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+          speak(`Current time ${time}.`);
+          showToast(`当前时间 ${time}`);
+          return true;
+        }
+        if (clean.includes("clear memory")) {
+          memoryList = [];
+          saveMemory();
+          renderMemory();
+          showToast("记忆池已清空");
+          speak("Memory cleared.");
+          return true;
+        }
+        if (hasWord("silence")) {
+          stopAllAudio();
+          showToast("已静音");
+          return true;
+        }
+        if (hasWord("red")) {
+          applyTheme("red");
+          showToast("已切换红色主题");
+          return true;
+        }
+        if (hasWord("blue")) {
+          applyTheme("blue");
+          showToast("已切换蓝色主题");
+          return true;
+        }
+        if (hasWord("sentry")) {
+          if (hasWord("off") || hasWord("disable") || hasWord("stop")) {
+            stopSentry();
+            showToast("SENTRY 已关闭");
+            return true;
+          }
+          if (hasWord("on") || hasWord("enable") || hasWord("start")) {
+            startSentry();
+            showToast("SENTRY 已启动");
+            return true;
+          }
+          toggleSentry();
+          showToast("SENTRY 已切换");
+          return true;
+        }
+        return false;
+      };
+
+      const processInput = (text) => {
+        const cleaned = text.trim();
+        if (!cleaned) {
+          return;
+        }
+        const executed = executeCommand(cleaned);
+        if (executed) {
+          appendLog("user", cleaned);
+          appendLog("system", "COMMAND EXECUTED.");
+          return;
+        }
+        sendToAi(cleaned);
+      };
+
+      const submitAiInput = () => {
+        if (!aiInput) {
+          return;
+        }
+        const value = aiInput.value;
+        aiInput.value = "";
+        processInput(value);
       };
 
       const setEnvOffline = (keepCoord = false) => {
@@ -1789,6 +2309,42 @@
         if (event.target === qrModal) {
           closeQrModal();
         }
+      });
+
+      if (settingsBtn) {
+        settingsBtn.addEventListener("click", openSettings);
+      }
+      if (settingsClose) {
+        settingsClose.addEventListener("click", closeSettings);
+      }
+      if (settingsModal) {
+        settingsModal.addEventListener("click", (event) => {
+          if (event.target === settingsModal) {
+            closeSettings();
+          }
+        });
+      }
+      if (saveSettingsBtn) {
+        saveSettingsBtn.addEventListener("click", saveAiSettings);
+      }
+
+      if (aiSend) {
+        aiSend.addEventListener("click", submitAiInput);
+      }
+      if (aiInput) {
+        aiInput.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            submitAiInput();
+          }
+        });
+      }
+
+      protocolButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const key = button.dataset.protocol;
+          launchProtocol(key);
+        });
       });
 
       panelTabs.forEach((btn) => {
@@ -2221,6 +2777,77 @@
         updateAudioUi();
       };
 
+      const playLaunchSound = () => {
+        const useShared = audioCtx && audioActive && audioCtx.state === "running";
+        const ctxToUse =
+          useShared
+            ? audioCtx
+            : new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctxToUse.createOscillator();
+        const gain = ctxToUse.createGain();
+        const now = ctxToUse.currentTime;
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.exponentialRampToValueAtTime(45, now + 0.6);
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.25, now + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+        osc.connect(gain);
+        gain.connect(ctxToUse.destination);
+        osc.start(now);
+        osc.stop(now + 0.65);
+        if (!useShared) {
+          osc.onended = () => ctxToUse.close();
+        }
+      };
+
+      const showDeployOverlay = () => {
+        if (!deployOverlay) {
+          return;
+        }
+        deployOverlay.classList.add("active");
+        clearTimeout(showDeployOverlay.timer);
+        showDeployOverlay.timer = setTimeout(
+          () => deployOverlay.classList.remove("active"),
+          1200
+        );
+      };
+
+      const protocolSets = {
+        academic: [
+          "https://gemini.google.com/",
+          "http://1.tongji.edu.cn/",
+          "https://canvas.tongji.edu.cn/",
+          "https://github.com/",
+        ],
+        command: ["https://shen806.dpdns.org/", "https://shen.chat/"],
+      };
+      protocolSets.total = Array.from(
+        new Set([...protocolSets.academic, ...protocolSets.command])
+      );
+
+      const launchProtocol = (key) => {
+        const urls = protocolSets[key];
+        if (!urls) {
+          return;
+        }
+        showDeployOverlay();
+        playLaunchSound();
+        let blocked = false;
+        urls.forEach((url) => {
+          const win = window.open(url, "_blank");
+          if (!win) {
+            blocked = true;
+          }
+        });
+        if (popupWarning) {
+          popupWarning.classList.toggle("hidden", !blocked);
+        }
+        if (blocked) {
+          showToast("弹窗被拦截，请允许弹窗", "danger");
+        }
+      };
+
       audioToggle.addEventListener("click", toggleAudio);
 
       const playBeep = () => {
@@ -2316,43 +2943,7 @@
       };
 
       const handleCommand = (transcript) => {
-        const clean = transcript.trim().toLowerCase();
-        const hasWord = (word) => new RegExp(`\\b${word}\\b`, "i").test(clean);
-        if (hasWord("status") || hasWord("report")) {
-          const time = new Date().toLocaleTimeString("en-US", {
-            hour12: false,
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-          const ip = currentIp || "UNKNOWN";
-          speak(`Status report. Time ${time}. IP ${ip}.`);
-          showToast("状态播报完成");
-          return;
-        }
-        if (clean.includes("clear memory")) {
-          memoryList = [];
-          saveMemory();
-          renderMemory();
-          showToast("记忆池已清空");
-          speak("Memory cleared.");
-          return;
-        }
-        if (hasWord("silence")) {
-          stopAllAudio();
-          showToast("已静音");
-          return;
-        }
-        if (hasWord("red")) {
-          applyTheme("red");
-          showToast("已切换红色主题");
-          return;
-        }
-        if (hasWord("blue")) {
-          applyTheme("blue");
-          showToast("已切换蓝色主题");
-          return;
-        }
-        showToast(`未识别指令: ${transcript}`, "danger");
+        processInput(transcript);
       };
 
       const initSpeech = () => {
@@ -2430,6 +3021,8 @@
       initHardware();
       initWeather();
       initSentry();
+      loadAiSettings();
+      appendLog("system", "NEURAL LINK: READY.");
 
       window.addEventListener("resize", () => {
         resizeSonic();
