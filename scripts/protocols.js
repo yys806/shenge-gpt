@@ -19,9 +19,15 @@ const launchProtocol = (key) => {
   showDeployOverlay();
   playLaunchSound();
   let blocked = false;
-  urls.forEach((url) => {
-    const win = window.open(url, "_blank");
+  const windows = urls.map(() => window.open("about:blank", "_blank"));
+  windows.forEach((win, index) => {
     if (!win) {
+      blocked = true;
+      return;
+    }
+    try {
+      win.location.href = urls[index];
+    } catch (error) {
       blocked = true;
     }
   });
