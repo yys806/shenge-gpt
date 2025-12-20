@@ -1434,7 +1434,11 @@
         <p>配置 API 端点与密钥，内容仅保存于本地。</p>
         <div class="field">
           <label>API Endpoint</label>
-          <input id="apiEndpoint" type="text" placeholder="https://api.openai.com/v1/chat/completions" />
+          <input
+            id="apiEndpoint"
+            type="text"
+            placeholder="https://api.deepseek.com or https://api.openai.com/v1/chat/completions"
+          />
         </div>
         <div class="field">
           <label>API Key</label>
@@ -1442,7 +1446,11 @@
         </div>
         <div class="field">
           <label>Model</label>
-          <input id="apiModel" type="text" placeholder="gpt-3.5-turbo" />
+          <input
+            id="apiModel"
+            type="text"
+            placeholder="deepseek-chat / gpt-3.5-turbo"
+          />
         </div>
         <button id="saveSettings" class="btn" type="button">保存配置</button>
       </div>
@@ -1589,6 +1597,44 @@
         model: "gpt-3.5-turbo",
       };
 
+      const normalizeEndpoint = (endpoint) => {
+        if (!endpoint) {
+          return endpoint;
+        }
+        try {
+          const url = new URL(endpoint);
+          const trimmedPath = url.pathname.replace(/\/+$/, "");
+          if (!trimmedPath) {
+            url.pathname = url.hostname.includes("deepseek")
+              ? "/chat/completions"
+              : "/v1/chat/completions";
+            return url.toString();
+          }
+          if (trimmedPath === "/v1") {
+            url.pathname = "/v1/chat/completions";
+            return url.toString();
+          }
+          return endpoint;
+        } catch (error) {
+          return endpoint;
+        }
+      };
+
+      const defaultModelForEndpoint = (endpoint, fallbackModel) => {
+        if (!endpoint) {
+          return fallbackModel;
+        }
+        try {
+          const url = new URL(endpoint);
+          if (url.hostname.includes("deepseek")) {
+            return "deepseek-chat";
+          }
+        } catch (error) {
+          return fallbackModel;
+        }
+        return fallbackModel;
+      };
+
       const isUrl = (text) => /^(https?:\/\/|www\.)/i.test(text.trim());
       const isCode = (text) =>
         /[{}`;]|<\/?[a-z][\s\S]*>|(function|const|let|var|=>|#include)/i.test(
@@ -1703,9 +1749,16 @@
         const endpoint = localStorage.getItem(AI_ENDPOINT_KEY);
         const key = localStorage.getItem(AI_KEY_KEY);
         const model = localStorage.getItem(AI_MODEL_KEY);
-        aiSettings.endpoint = endpoint || aiSettings.endpoint;
+        aiSettings.endpoint = normalizeEndpoint(endpoint || aiSettings.endpoint);
         aiSettings.key = key || "";
         aiSettings.model = model || aiSettings.model;
+        if (
+          aiSettings.endpoint.includes("deepseek") &&
+          (!model || aiSettings.model === "gpt-3.5-turbo")
+        ) {
+          aiSettings.model = "deepseek-chat";
+          localStorage.setItem(AI_MODEL_KEY, aiSettings.model);
+        }
         if (apiEndpointInput) {
           apiEndpointInput.value = aiSettings.endpoint;
         }
@@ -1740,7 +1793,8 @@
         if (apiEndpointInput) {
           const value = apiEndpointInput.value.trim();
           if (value) {
-            aiSettings.endpoint = value;
+            aiSettings.endpoint = normalizeEndpoint(value);
+            apiEndpointInput.value = aiSettings.endpoint;
           }
         }
         if (apiKeyInput) {
@@ -1750,6 +1804,12 @@
           const value = apiModelInput.value.trim();
           if (value) {
             aiSettings.model = value;
+          } else {
+            aiSettings.model = defaultModelForEndpoint(
+              aiSettings.endpoint,
+              aiSettings.model
+            );
+            apiModelInput.value = aiSettings.model;
           }
         }
         localStorage.setItem(AI_ENDPOINT_KEY, aiSettings.endpoint);
@@ -1795,7 +1855,15 @@
             ],
             temperature: 0.6,
           };
-          const response = await fetch(aiSettings.endpoint, {
+          const endpoint = normalizeEndpoint(aiSettings.endpoint);
+          if (endpoint !== aiSettings.endpoint) {
+            aiSettings.endpoint = endpoint;
+            localStorage.setItem(AI_ENDPOINT_KEY, aiSettings.endpoint);
+            if (apiEndpointInput) {
+              apiEndpointInput.value = aiSettings.endpoint;
+            }
+          }
+          const response = await fetch(endpoint, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
