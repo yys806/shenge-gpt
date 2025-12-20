@@ -252,7 +252,7 @@
       }
 
       .icon-btn {
-        width: 26px;
+        width: 32px;
         height: 26px;
         padding: 0;
         font-size: 16px;
@@ -303,6 +303,14 @@
         gap: 8px;
         margin-bottom: 16px;
         flex-wrap: wrap;
+      }
+
+      .panel-tabs {
+        margin-bottom: 18px;
+      }
+
+      .panel-tabs .tab-btn {
+        letter-spacing: 1px;
       }
 
       .tab-btn.active {
@@ -370,10 +378,30 @@
       }
 
       .output.typing::after {
-        content: "▮";
+        content: "|";
         margin-left: 6px;
         animation: blink 0.9s infinite;
         color: var(--green);
+      }
+
+      .transmute-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .trans-output {
+        background: #0a0a0a;
+        border: 1px solid rgba(0, 243, 255, 0.45);
+        padding: 10px 12px;
+        min-height: 80px;
+        font-size: 16px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        box-shadow: inset 0 0 8px rgba(0, 243, 255, 0.18);
+      }
+
+      .trans-output.flicker {
+        animation: flicker 0.25s steps(2, end) 2;
       }
 
       .download-link {
@@ -410,6 +438,38 @@
       .toast.show {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
+      }
+
+      .net-ghost {
+        position: fixed;
+        top: 12px;
+        right: 16px;
+        padding: 10px 12px;
+        font-size: 14px;
+        color: var(--text);
+        background: rgba(5, 5, 5, 0.7);
+        border: 1px solid rgba(0, 243, 255, 0.35);
+        box-shadow: 0 0 16px rgba(0, 243, 255, 0.15);
+        z-index: 25;
+        min-width: 180px;
+      }
+
+      .ghost-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+        color: var(--cyan);
+        text-shadow: 0 0 8px rgba(0, 243, 255, 0.5);
+      }
+
+      .ghost-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 10px rgba(0, 255, 106, 0.7);
+        animation: pulse 1.5s ease-in-out infinite;
       }
 
       .modal {
@@ -647,6 +707,17 @@
         }
       }
 
+      @keyframes flicker {
+        0% {
+          opacity: 0.6;
+          text-shadow: 0 0 6px rgba(0, 243, 255, 0.7);
+        }
+        100% {
+          opacity: 1;
+          text-shadow: none;
+        }
+      }
+
       @keyframes blink {
         0%,
         100% {
@@ -654,6 +725,18 @@
         }
         50% {
           opacity: 0;
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: scale(1.4);
+          opacity: 1;
         }
       }
 
@@ -681,11 +764,27 @@
         .sonic-footer canvas {
           height: 80px;
         }
+
+        .net-ghost {
+          top: 8px;
+          right: 8px;
+          font-size: 12px;
+          min-width: 150px;
+        }
       }
     </style>
   </head>
   <body>
     <div class="scanlines"></div>
+    <div id="netGhost" class="net-ghost">
+      <div class="ghost-header">
+        <span class="ghost-dot"></span>
+        NET GHOST PROBE
+      </div>
+      <div id="ipLine">IP: LOADING...</div>
+      <div id="locLine">LOC: UNKNOWN</div>
+      <div id="latencyLine">LATENCY: 24ms</div>
+    </div>
 
     <div class="app">
       <header>
@@ -711,62 +810,109 @@
 
         <section class="panel">
           <h2>Cipher Channel / 密码信道</h2>
-          <div class="cipher-tabs">
-            <button class="tab-btn active" data-mode="inject">INJECT</button>
-            <button class="tab-btn" data-mode="extract">EXTRACT</button>
+          <div class="cipher-tabs panel-tabs">
+            <button class="tab-btn panel-tab active" data-panel="cipher">
+              CIPHER
+            </button>
+            <button class="tab-btn panel-tab" data-panel="transmute">
+              TRANSMUTE
+            </button>
           </div>
 
-          <div id="injectPanel" class="mode-panel active">
-            <div class="field">
-              <label>1. 上传载体图片</label>
-              <div class="file-actions">
-                <label class="btn file-label">
-                  选择图片
-                  <input
-                    id="injectFile"
-                    class="file-input"
-                    type="file"
-                    accept="image/*"
-                  />
-                </label>
-                <button id="injectClear" class="btn secondary" type="button">
-                  清除
-                </button>
+          <div id="cipherPanel" class="mode-panel active">
+            <div class="cipher-tabs">
+              <button class="tab-btn cipher-tab active" data-mode="inject">
+                INJECT
+              </button>
+              <button class="tab-btn cipher-tab" data-mode="extract">
+                EXTRACT
+              </button>
+            </div>
+
+            <div id="injectPanel" class="mode-panel active">
+              <div class="field">
+                <label>1. 上传载体图片</label>
+                <div class="file-actions">
+                  <label class="btn file-label">
+                    选择图片
+                    <input
+                      id="injectFile"
+                      class="file-input"
+                      type="file"
+                      accept="image/*"
+                    />
+                  </label>
+                  <button id="injectClear" class="btn secondary" type="button">
+                    清除
+                  </button>
+                </div>
+                <div id="injectCapacity" class="memory-hint"></div>
+                <img id="injectPreview" class="preview hidden" alt="预览" />
               </div>
-              <div id="injectCapacity" class="memory-hint"></div>
-              <img id="injectPreview" class="preview hidden" alt="预览" />
+              <div class="field">
+                <label>2. 输入需要隐藏的文本</label>
+                <textarea
+                  id="secretInput"
+                  placeholder="在这里输入秘密讯息..."
+                ></textarea>
+              </div>
+              <button id="injectBtn">注入并生成</button>
+              <a
+                id="downloadLink"
+                class="download-link disabled"
+                href="#"
+                download
+              >
+                下载隐写图像
+              </a>
             </div>
-            <div class="field">
-              <label>2. 输入需要隐藏的文本</label>
-              <textarea id="secretInput" placeholder="在这里输入秘密讯息..."></textarea>
+
+            <div id="extractPanel" class="mode-panel">
+              <div class="field">
+                <label>1. 上传已注入的图片</label>
+                <div class="file-actions">
+                  <label class="btn file-label">
+                    选择图片
+                    <input
+                      id="extractFile"
+                      class="file-input"
+                      type="file"
+                      accept="image/*"
+                    />
+                  </label>
+                  <button id="extractClear" class="btn secondary" type="button">
+                    清除
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <label>2. 解析出的隐藏内容</label>
+                <div id="extractOutput" class="output">等待图像输入...</div>
+              </div>
             </div>
-            <button id="injectBtn">注入并生成</button>
-            <a id="downloadLink" class="download-link disabled" href="#" download>
-              下载隐写图像
-            </a>
           </div>
 
-          <div id="extractPanel" class="mode-panel">
+          <div id="transmutePanel" class="mode-panel">
             <div class="field">
-              <label>1. 上传已注入的图片</label>
-              <div class="file-actions">
-                <label class="btn file-label">
-                  选择图片
-                  <input
-                    id="extractFile"
-                    class="file-input"
-                    type="file"
-                    accept="image/*"
-                  />
-                </label>
-                <button id="extractClear" class="btn secondary" type="button">
-                  清除
-                </button>
-              </div>
+              <label>Raw Data Input / 原始数据输入</label>
+              <textarea
+                id="transmuteInput"
+                placeholder="输入文本以转译..."
+              ></textarea>
             </div>
-            <div class="field">
-              <label>2. 解析出的隐藏内容</label>
-              <div id="extractOutput" class="output">等待图像输入...</div>
+            <div class="transmute-grid">
+              <div class="field">
+                <label>Hexadecimal / 十六进制</label>
+                <div id="hexOutput" class="trans-output"></div>
+              </div>
+              <div class="field">
+                <label>Binary / 二进制</label>
+                <div id="binOutput" class="trans-output"></div>
+              </div>
+              <div class="field">
+                <label>Base64 / 编码</label>
+                <div id="base64Output" class="trans-output"></div>
+              </div>
             </div>
           </div>
         </section>
@@ -778,7 +924,7 @@
     <div id="qrModal" class="modal" aria-hidden="true">
       <div id="qrPanel" class="modal-panel" role="dialog" aria-modal="true">
         <button id="qrClose" class="btn secondary modal-close" type="button">
-          ✕
+          X
         </button>
         <h3>Glitch QR Bridge</h3>
         <p>扫描以同步数据块。</p>
@@ -832,6 +978,18 @@
       const extractFile = document.getElementById("extractFile");
       const extractClear = document.getElementById("extractClear");
       const extractOutput = document.getElementById("extractOutput");
+
+      const panelTabs = document.querySelectorAll(".panel-tab");
+      const cipherPanel = document.getElementById("cipherPanel");
+      const transmutePanel = document.getElementById("transmutePanel");
+      const transmuteInput = document.getElementById("transmuteInput");
+      const hexOutput = document.getElementById("hexOutput");
+      const binOutput = document.getElementById("binOutput");
+      const base64Output = document.getElementById("base64Output");
+
+      const ipLine = document.getElementById("ipLine");
+      const locLine = document.getElementById("locLine");
+      const latencyLine = document.getElementById("latencyLine");
 
       const qrModal = document.getElementById("qrModal");
       const qrPanel = document.getElementById("qrPanel");
@@ -898,7 +1056,7 @@
           const tagParts = [];
           if (isUrl(item)) {
             block.classList.add("link");
-            tagParts.push("🔗");
+            tagParts.push("URL");
           }
           if (isCode(item)) {
             block.classList.add("code");
@@ -930,7 +1088,7 @@
           qrBtn.type = "button";
           qrBtn.className = "icon-btn qr-btn";
           qrBtn.title = "生成 QR";
-          qrBtn.textContent = "▚";
+          qrBtn.textContent = "QR";
           qrBtn.addEventListener("click", (event) => {
             event.stopPropagation();
             openQrModal(item);
@@ -940,7 +1098,7 @@
           delBtn.type = "button";
           delBtn.className = "icon-btn delete-btn";
           delBtn.title = "删除";
-          delBtn.textContent = "✕";
+          delBtn.textContent = "X";
           delBtn.addEventListener("click", (event) => {
             event.stopPropagation();
             deleteBlock(block);
@@ -954,7 +1112,8 @@
 
           const content = document.createElement("div");
           content.className = "block-content";
-          content.textContent = item.length > 140 ? `${item.slice(0, 140)}…` : item;
+          content.textContent =
+            item.length > 140 ? `${item.slice(0, 140)}...` : item;
           content.title = item;
 
           block.appendChild(head);
@@ -1059,10 +1218,20 @@
         }
       });
 
-      document.querySelectorAll(".tab-btn").forEach((btn) => {
+      panelTabs.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          panelTabs.forEach((item) => item.classList.remove("active"));
+          btn.classList.add("active");
+          const panel = btn.dataset.panel;
+          cipherPanel.classList.toggle("active", panel === "cipher");
+          transmutePanel.classList.toggle("active", panel === "transmute");
+        });
+      });
+
+      document.querySelectorAll(".cipher-tab").forEach((btn) => {
         btn.addEventListener("click", () => {
           document
-            .querySelectorAll(".tab-btn")
+            .querySelectorAll(".cipher-tab")
             .forEach((item) => item.classList.remove("active"));
           btn.classList.add("active");
 
@@ -1170,6 +1339,62 @@
         return new TextDecoder().decode(bytes);
       };
 
+      const bytesToHex = (bytes) =>
+        Array.from(bytes)
+          .map((byte) => byte.toString(16).padStart(2, "0"))
+          .join(" ");
+
+      const bytesToBin = (bytes) =>
+        Array.from(bytes)
+          .map((byte) => byte.toString(2).padStart(8, "0"))
+          .join(" ");
+
+      const bytesToBase64 = (bytes) => {
+        if (!bytes.length) {
+          return "";
+        }
+        let binary = "";
+        bytes.forEach((byte) => {
+          binary += String.fromCharCode(byte);
+        });
+        return btoa(binary);
+      };
+
+      const triggerFlicker = (element) => {
+        if (!element) {
+          return;
+        }
+        element.classList.remove("flicker");
+        void element.offsetWidth;
+        element.classList.add("flicker");
+        clearTimeout(element.flickerTimer);
+        element.flickerTimer = setTimeout(
+          () => element.classList.remove("flicker"),
+          260
+        );
+      };
+
+      const updateTransmute = () => {
+        const text = transmuteInput.value;
+        if (!text) {
+          hexOutput.textContent = "";
+          binOutput.textContent = "";
+          base64Output.textContent = "";
+          return;
+        }
+        const bytes = new TextEncoder().encode(text);
+        hexOutput.textContent = bytesToHex(bytes);
+        binOutput.textContent = bytesToBin(bytes);
+        let base64 = "";
+        try {
+          base64 = bytesToBase64(bytes);
+        } catch (error) {
+          base64 = "";
+        }
+        base64Output.textContent = base64;
+        [hexOutput, binOutput, base64Output].forEach(triggerFlicker);
+      };
+
       const resetInject = () => {
         injectFile.value = "";
         injectPreview.src = "";
@@ -1275,6 +1500,7 @@
       });
 
       extractClear.addEventListener("click", resetExtract);
+      transmuteInput.addEventListener("input", updateTransmute);
 
       const resizeSonic = () => {
         const dpr = window.devicePixelRatio || 1;
@@ -1483,11 +1709,31 @@
         }
       });
 
+      const updateLatency = () => {
+        const value = Math.floor(18 + Math.random() * 60);
+        latencyLine.textContent = `LATENCY: ${value}ms`;
+      };
+
+      const loadIpAddress = async () => {
+        try {
+          const response = await fetch("https://api.ipify.org?format=json");
+          const data = await response.json();
+          ipLine.textContent = `IP: ${data.ip || "UNKNOWN"}`;
+        } catch (error) {
+          ipLine.textContent = "IP: OFFLINE";
+        }
+      };
+
+      updateLatency();
+      setInterval(updateLatency, 2000);
+      loadIpAddress();
+
       window.addEventListener("resize", resizeSonic);
 
       loadMemory();
       resetInject();
       resetExtract();
+      updateTransmute();
       resizeSonic();
       drawSonic();
     </script>
