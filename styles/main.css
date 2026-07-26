@@ -405,6 +405,15 @@
         box-shadow: 0 0 18px rgba(189, 0, 255, 0.45);
       }
 
+      button:focus-visible,
+      .btn:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible {
+        outline: 2px solid var(--cyan);
+        outline-offset: 2px;
+      }
+
       .memory-hint {
         margin-bottom: 10px;
         color: var(--muted);
@@ -1172,5 +1181,15 @@
           right: 8px;
           font-size: 12px;
           min-width: 150px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
         }
       }
