@@ -1,5 +1,16 @@
+// 每个数据块持有运行时唯一 id，删除时按 id 定位，
+// 避免渲染时 index 在并发删除/重渲染后失效的竞态。
+const makeBlockId = () =>
+  window.crypto && typeof window.crypto.randomUUID === "function"
+    ? window.crypto.randomUUID()
+    : `blk-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+
 const saveMemory = () => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(memoryList));
+  // 存储格式保持为纯文本数组，与旧版本数据兼容
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(memoryList.map((item) => item.text))
+  );
 };
 
 const renderMemory = () => {
@@ -15,14 +26,14 @@ const renderMemory = () => {
   memoryList.forEach((item, index) => {
     const block = document.createElement("div");
     block.className = "data-block";
-    block.dataset.index = index;
+    block.dataset.id = item.id;
 
     const tagParts = [];
-    if (isUrl(item)) {
+    if (isUrl(item.text)) {
       block.classList.add("link");
       tagParts.push("URL");
     }
-    if (isCode(item)) {
+    if (isCode(item.text)) {
       block.classList.add("code");
       tagParts.push("CODE");
     }
@@ -55,7 +66,7 @@ const renderMemory = () => {
     qrBtn.textContent = "QR";
     qrBtn.addEventListener("click", (event) => {
       event.stopPropagation();
-      openQrModal(item);
+      openQrModal(item.text);
     });
 
     const delBtn = document.createElement("button");
@@ -76,13 +87,14 @@ const renderMemory = () => {
 
     const content = document.createElement("div");
     content.className = "block-content";
-    content.textContent = item.length > 140 ? `${item.slice(0, 140)}...` : item;
-    content.title = item;
+    content.textContent =
+      item.text.length > 140 ? `${item.text.slice(0, 140)}...` : item.text;
+    content.title = item.text;
 
     block.appendChild(head);
     block.appendChild(content);
 
-    block.addEventListener("click", () => copyToClipboard(item));
+    block.addEventListener("click", () => copyToClipboard(item.text));
     block.addEventListener("contextmenu", (event) => {
       event.preventDefault();
       deleteBlock(block);
@@ -112,17 +124,30 @@ const copyToClipboard = async (text) => {
 };
 
 const deleteBlock = (block) => {
-  const index = Number(block.dataset.index);
+  const { id } = block.dataset;
+  const index = memoryList.findIndex((item) => item.id === id);
+  if (index === -1) {
+    // 已被删除（如快速重复点击），忽略
+    return;
+  }
+  // 先从数据层删除并落盘，动画只负责视觉过渡，
+  // 这样并发删除或中途重渲染都不会误删/漏删。
+  memoryList.splice(index, 1);
+  saveMemory();
+
   block.classList.add("shatter");
-  block.addEventListener(
-    "animationend",
-    () => {
-      memoryList.splice(index, 1);
-      saveMemory();
-      renderMemory();
-    },
-    { once: true }
-  );
+  block.style.pointerEvents = "none";
+  let finished = false;
+  const finish = () => {
+    if (finished) {
+      return;
+    }
+    finished = true;
+    renderMemory();
+  };
+  block.addEventListener("animationend", finish, { once: true });
+  // 动画被禁用或节点提前被移除时的兜底
+  setTimeout(finish, 450);
 };
 
 const addMemory = () => {
@@ -130,7 +155,7 @@ const addMemory = () => {
   if (!text) {
     return;
   }
-  memoryList.unshift(text);
+  memoryList.unshift({ id: makeBlockId(), text });
   memoryInput.value = "";
   saveMemory();
   renderMemory();
@@ -148,7 +173,18 @@ const loadMemory = () => {
     try {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed)) {
-        memoryList = parsed;
+        // 兼容旧版纯字符串数组与可能的对象格式
+        memoryList = parsed
+          .map((entry) => {
+            if (typeof entry === "string") {
+              return { id: makeBlockId(), text: entry };
+            }
+            if (entry && typeof entry.text === "string") {
+              return { id: makeBlockId(), text: entry.text };
+            }
+            return null;
+          })
+          .filter(Boolean);
       }
     } catch (error) {
       memoryList = [];
