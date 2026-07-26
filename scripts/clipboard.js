@@ -194,6 +194,15 @@ const loadMemory = () => {
 };
 
 const openQrModal = (text) => {
+  // 二维码由第三方服务生成，数据块内容会随请求离开本机。
+  // 发送前必须让用户知情并确认。
+  const confirmed = window.confirm(
+    "生成二维码将把该数据块内容发送到第三方服务 api.qrserver.com。\n" +
+      "如内容包含密码、密钥等隐私信息，请勿继续。\n\n是否继续生成？"
+  );
+  if (!confirmed) {
+    return;
+  }
   const encoded = encodeURIComponent(text);
   qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encoded}`;
   qrText.textContent = text;
